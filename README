@@ -1,0 +1,12 @@
+
+AmbientWeather: Glanceable weather information to prepare you for the day
+
+This is a simple, native weather app for BlackBerry 10, made with Cascades.
+It uses OpenWeatherMap to pull the weather data and Flickr for the local
+images.
+
+Author: Dirk Songuer
+Contact: dirk@songuer.de
+Link: https://github.com/DirkSonguer/AmbientWeather
+
+Tested with BlackBerry 10.1 on a Z10 and simulator 10.1.0.4828
