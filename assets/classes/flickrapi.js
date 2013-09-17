@@ -62,8 +62,10 @@ function getFlickrSearchResults(currentGeolocation, currentWeatherData, currentS
 
 	// build tags from weather description
 	var flickrTags = "";
-	flickrTags = currentWeatherData.weather_description.split(' ').join(',');
-	flickrTags += "," + currentWeatherData.sys_daytime;
+	if (currentWeatherData.weather_description != null) {
+		flickrTags = currentWeatherData.weather_description.split(' ').join(',');
+		flickrTags += "," + currentWeatherData.sys_daytime;
+	}
 
 	// build URL for API call with relevant parameters
 	var url = "http://ycpi.api.flickr.com/services/rest";

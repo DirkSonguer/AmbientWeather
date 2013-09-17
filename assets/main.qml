@@ -25,16 +25,16 @@ NavigationPane {
         // contains lat and lon
         property variant currentGeolocation
 
+        // property for the weather for current location
+        property variant currentWeatherdata
+
         // the current index of the available images
+        // this might change dynamically if no images are found and the radius is widened
         property real currentLocationSearchRadius: Globals.locationSearchRadius
 
         // flickr api signals
         signal imageDataLoaded(variant imageDataArray)
         signal imageDataError(variant errorData)
-
-        // location api signals
-        signal locationDataLoaded(variant locationData)
-        signal locationDataError(variant errorData)
 
         // weather api signals
         signal weatherDataLoaded(variant weatherData)
@@ -44,6 +44,9 @@ NavigationPane {
             layout: DockLayout {
             }
 
+			// background image
+			// the component also contains the logic for changing images
+			// and their transitions
             BackgroundImage {
                 id: backgroundImage
             }
@@ -51,7 +54,7 @@ NavigationPane {
             WeatherDashboard {
                 id: weatherDashboard
 
-                bottomPadding: 150
+                bottomPadding: (DisplayInfo.height / 10)
                 rightPadding: 20
             }
 
@@ -118,15 +121,17 @@ NavigationPane {
                 // extend search radius and search again
                 ambientWeatherMainPage.currentLocationSearchRadius += Globals.locationSearchRadius;
                 console.log("# Extending search radius to " + ambientWeatherMainPage.currentLocationSearchRadius);
-                FlickrAPI.getFlickrSearchResults(ambientWeatherMainPage.currentGeolocation, ambientWeatherMainPage.currentLocationSearchRadius, ambientWeatherMainPage);
+                FlickrAPI.getFlickrSearchResults(ambientWeatherMainPage.currentGeolocation, ambientWeatherMainPage.currentWeatherdata, ambientWeatherMainPage.currentLocationSearchRadius, ambientWeatherMainPage);
             }
         }
 
-        onLocationDataLoaded: {
-        }
-
         onWeatherDataLoaded: {
+            // load weather data into component
             weatherDashboard.setWeatherData(weatherData);
+            
+            ambientWeatherMainPage.currentWeatherdata = weatherData;
+            
+            // load images for location
             FlickrAPI.getFlickrSearchResults(ambientWeatherMainPage.currentGeolocation, weatherData, ambientWeatherMainPage.currentLocationSearchRadius, ambientWeatherMainPage);
         }
 
@@ -137,8 +142,9 @@ NavigationPane {
                 // desired interval between updates in milliseconds
                 updateInterval: 10000
 
-                // when position changed, update the location strings
+                // when position found (changed from null), update the location objects
                 onPositionChanged: {
+                    // store coordinates
                     ambientWeatherMainPage.currentGeolocation = positionSource.position.coordinate;
 
                     // check if location was really fixed
@@ -151,10 +157,8 @@ NavigationPane {
                         // stop location service
                         positionSource.stop();
 
-                        // start loading data for location
-                        // this can be done simultaniously as all rely on the dame location data
+                        // start loading weather data for location
                         weatherDashboard.weatherCondition = "Loading weather data..";
-                        // LocationAPI.getLocationData(ambientWeatherMainPage.currentGeolocation, ambientWeatherMainPage);
                         WeatherAPI.getWeatherData(ambientWeatherMainPage.currentGeolocation, ambientWeatherMainPage);
                     }
                 }

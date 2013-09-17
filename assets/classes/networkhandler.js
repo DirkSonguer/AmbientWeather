@@ -58,7 +58,7 @@ NetworkHandler.prototype.handleHttpResult = function(XMLHttpRequestObject) {
 				// and return");
 				this.errorData.errorType = "Generic Network Error";
 				this.errorData.errorCode = XMLHttpRequestObject.status;
-				if ( (httpResponseText == null) || (httpResponseText === "")) {
+				if ( (XMLHttpRequestObject.responseText == null) || (XMLHttpRequestObject.responseText === "")) {
 					// console.log("# Empty response, adding generic error");
 					this.errorData.errorMessage = "A generic network error occured";
 				} else {

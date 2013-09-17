@@ -10,7 +10,7 @@
 Qt.include(dirPaths.assetPath + "/classes/networkhandler.js");
 Qt.include(dirPaths.assetPath + "/structures/locationdata.js");
 
-function getLocationData(currentGeolocation, callingPage) {
+function getLocationDataForCoordinates(currentGeolocation, callingPage) {
 	console.log("# Searching for location data for lat: " + currentGeolocation.latitude + " and lon: " + currentGeolocation.longitude);
 
 	var req = new XMLHttpRequest();
@@ -24,7 +24,7 @@ function getLocationData(currentGeolocation, callingPage) {
 
 			// prepare return object
 			var locationItem = new LocationData();
-			
+
 			// get available data
 			locationItem.place_id = jsonObject.place_id;
 			locationItem.lat = jsonObject.lat;
@@ -69,6 +69,67 @@ function getLocationData(currentGeolocation, callingPage) {
 	url += "&zoom=6";
 	url += "&lat=" + currentGeolocation.latitude;
 	url += "&lon=" + currentGeolocation.longitude;
+	console.log("# URL for location data call: " + url);
+
+	req.open("GET", url, true);
+	req.send();
+}
+
+function getLocationDataForName(currentLocationName, callingPage) {
+	console.log("# Searching for location data for name: " + currentLocationName);
+
+	var req = new XMLHttpRequest();
+	req.onreadystatechange = function() {
+		// this handles the result for each ready state
+		var jsonObject = network.handleHttpResult(req);
+
+		// jsonObject contains either false or the http result as object
+		if (jsonObject) {
+			console.log("# Analysing location data");
+
+			var locationDataArray = new Array();
+
+			// iterate through all user items
+			for ( var index in jsonObject) {
+				if (jsonObject[index].type == "city") {
+					// prepare return object
+					var locationItem = new LocationData();
+
+					// get available data
+					locationItem.place_id = jsonObject[index].place_id;
+					locationItem.lat = jsonObject[index].lat;
+					locationItem.lon = jsonObject[index].lon;
+					locationItem.display_name = jsonObject[index].display_name;
+					locationItem.licence = jsonObject[index].licence;
+					locationItem.osm_id = jsonObject[index].osm_id;
+					locationItem.osm_type = jsonObject[index].osm_type;
+
+					locationDataArray.push(locationItem);
+					console.log("# Found city: " + locationItem.display_name);
+				}
+			}
+
+			console.log("# Done loading location data. Found " + locationDataArray.length + " locations");
+			callingPage.locationDataLoaded(locationDataArray);
+		} else {
+			// either the request is not done yet or an error occured
+			// check for both and act accordingly
+			// found error will be handed over to the calling page
+			if ((network.requestIsFinished) && (network.errorData.errorCode != "")) {
+				// console.log("# Error found with code " +
+				// network.errorData.errorCode + " and message " +
+				// network.errorData.errorMessage);
+				// callingPage.locationDataError(network.errorData);
+				network.clearErrors();
+			}
+		}
+	};
+
+	// build URL for API call with relevant parameters
+	var url = "http://open.mapquestapi.com/nominatim/v1/search.php";
+	url += "?format=json";
+	url += "&q=" + currentLocationName;
+	url += "&limit=10";
 	console.log("# URL for location data call: " + url);
 
 	req.open("GET", url, true);
