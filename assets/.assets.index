@@ -1,7 +1,8 @@
 1
-42
+44
 classes/flickrapi.js
 classes/locationapi.js
+classes/locationmanager.js
 classes/networkhandler.js
 classes/weatherapi.js
 components/BackgroundImage.qml
@@ -40,5 +41,6 @@ pages/LocationManagement.qml
 sheets/NewLocation.qml
 structures/errordata.js
 structures/flickrimagedata.js
+structures/geolocationdata.js
 structures/locationdata.js
 structures/weatherdata.js

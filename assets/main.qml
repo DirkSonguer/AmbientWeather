@@ -14,6 +14,8 @@ import "global/globals.js" as Globals
 import "classes/flickrapi.js" as FlickrAPI
 import "classes/locationapi.js" as LocationAPI
 import "classes/weatherapi.js" as WeatherAPI
+import "classes/locationmanager.js" as LocationManager
+import "structures/geolocationdata.js" as GeolocationData
 
 NavigationPane {
     id: navigationPane
@@ -40,13 +42,16 @@ NavigationPane {
         signal weatherDataLoaded(variant weatherData)
         signal weatherDataError(variant errorData)
 
+        // change location
+        signal changeLocation(variant locationData)
+
         Container {
             layout: DockLayout {
             }
 
-			// background image
-			// the component also contains the logic for changing images
-			// and their transitions
+            // background image
+            // the component also contains the logic for changing images
+            // and their transitions
             BackgroundImage {
                 id: backgroundImage
             }
@@ -78,6 +83,8 @@ NavigationPane {
                             weatherDashboard.weatherLocation = "Ambient Weather";
                             weatherDashboard.weatherCondition = "Getting your position..";
 
+                            LocationManager.resetActiveLocation();
+
                             console.log("# Starting location fix");
                             positionSource.start();
                         }
@@ -102,8 +109,35 @@ NavigationPane {
             // loading default image
             backgroundImage.showLocalImage("asset:///images/ambient_weather_intro.jpg");
 
-            console.log("# Starting location fix");
-            positionSource.start()
+            var activeLocation = new Array;
+            activeLocation = LocationManager.getActiveLocation();
+
+            if (activeLocation.display_name != null) {
+                console.log("# Using active location " + activeLocation.display_name);
+                // start loading weather data for location
+                weatherDashboard.weatherCondition = "Loading weather data..";
+                var locationCoordinates = new GeolocationData.GeolocationData;
+                locationCoordinates.latitude = activeLocation.lat;
+                locationCoordinates.longitude = activeLocation.lon;
+                ambientWeatherMainPage.currentGeolocation = locationCoordinates;
+                WeatherAPI.getWeatherData(ambientWeatherMainPage.currentGeolocation, ambientWeatherMainPage);
+            } else {
+                console.log("# No active location set, starting location fix");
+                positionSource.start()
+            }
+        }
+
+        // change location
+        onChangeLocation: {
+            // loading default image
+            backgroundImage.showLocalImage("asset:///images/ambient_weather_intro.jpg");
+            
+                weatherDashboard.weatherCondition = "Loading weather data..";
+                var locationCoordinates = new GeolocationData.GeolocationData;
+                locationCoordinates.latitude = locationData.lat;
+                locationCoordinates.longitude = locationData.lon;
+                ambientWeatherMainPage.currentGeolocation = locationCoordinates;
+                WeatherAPI.getWeatherData(ambientWeatherMainPage.currentGeolocation, ambientWeatherMainPage);
         }
 
         onImageDataLoaded: {
@@ -128,9 +162,9 @@ NavigationPane {
         onWeatherDataLoaded: {
             // load weather data into component
             weatherDashboard.setWeatherData(weatherData);
-            
+
             ambientWeatherMainPage.currentWeatherdata = weatherData;
-            
+
             // load images for location
             FlickrAPI.getFlickrSearchResults(ambientWeatherMainPage.currentGeolocation, weatherData, ambientWeatherMainPage.currentLocationSearchRadius, ambientWeatherMainPage);
         }

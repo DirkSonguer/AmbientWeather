@@ -10,6 +10,7 @@
 // data structure for location item
 function LocationData() {
 	this.place_id = "";
+	this.active = "";
 	
 	// license information
 	this.licence = "";

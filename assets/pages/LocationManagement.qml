@@ -61,16 +61,41 @@ Page {
         Divider {
         }
 
-        // location list
+        LocationList {
+            id: storedLocationList
+            
+            onLocationClicked: {
+                console.log("# Setting active item " + locationData.display_name);
+                LocationManager.setActiveLocation(locationData);
+                ambientWeatherMainPage.changeLocation(locationData);
+                navigationPane.pop();
+            }
+        }
 
         // long press
         // add
         // delete
     }
+    
+    onCreationCompleted: {
+        console.log("# Loading location list");
+        storedLocationList.clearList();
+        var locationDataArray = new Array();
+        locationDataArray = LocationManager.getStoredLocations();
+        for (var index in locationDataArray) {
+            storedLocationList.addToList(locationDataArray[index]);
+        }
+    }
 
     onAddNewLocation: {
         console.log("# Adding new location " + locationData.display_name);
         LocationManager.storeNewLocation(locationData);
+        storedLocationList.clearList();
+        var locationDataArray = new Array();
+        locationDataArray = LocationManager.getStoredLocations();
+        for (var index in locationDataArray) {
+            storedLocationList.addToList(locationDataArray[index]);
+        }
     }
 
     // attached objects
