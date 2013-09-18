@@ -236,10 +236,6 @@ NavigationPane {
                         backgroundImage.orientationChanged(DisplayInfo.height, DisplayInfo.width);
                     }
                 }
-                onOrientationChanged: {
-                    // Any additional changes to be performed after the orientation
-                    // change has occured.
-                }
             }
         ]
     }

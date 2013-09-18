@@ -22,11 +22,16 @@ Container {
     // signal if user taps on an item
     // item content (LocationData) will be handed back to the defining page
     signal locationClicked(variant locationData)
+    
+    // signal if user wants to remove the item
+    // item content (LocationData) will be handed back to the defining page
+    signal removeLocation(variant locationData)
 
     // this is a workaround to make the signals visible inside the listview item scope
     // see here for details: http://supportforums.blackberry.com/t5/Cascades-Development/QML-Accessing-variables-defined-outside-a-list-component-from/m-p/1786265#M641
     onCreationCompleted: {
         Qt.locationClicked = locationClicked;
+        Qt.removeLocation = removeLocation;
     }
 
     // list view containing the individual location items
@@ -48,14 +53,14 @@ Container {
                     layout: StackLayout {
                         orientation: LayoutOrientation.TopToBottom
                     }
-                    
+
                     Container {
                         // layour definition
                         topPadding: 20
                         bottomPadding: 15
                         leftPadding: 10
                         rightPadding: 10
-                        
+
                         // location name
                         Label {
                             textStyle.base: SystemDefaults.TextStyles.PrimaryText
@@ -74,6 +79,35 @@ Container {
                         }
                     ]
 
+                    // context menu for image gallery
+                    contextActions: [
+                        ActionSet {
+                            title: ListItemData.locationData.display_name
+                            subtitle: ""
+
+                            // use current location
+                            ActionItem {
+                                title: "Delete location"
+                                imageSource: "asset:///images/icon_delete.png"
+
+                                // action called
+                                onTriggered: {
+                                    Qt.removeLocation(ListItemData.locationData);
+                                }
+                            }
+                            // change current location from manual list
+                            ActionItem {
+                                title: "Select location"
+                                imageSource: "asset:///images/icon_accept.png"
+
+                                // action called
+                                onTriggered: {
+                                    Qt.locationClicked(ListItemData.locationData);
+                                }
+                            }
+                        }
+                    ]
+
                     // divider for the individual list items
                     Divider {
                     }
@@ -82,7 +116,7 @@ Container {
                     // if item is tapped, change opacity
                     ListItem.onActivationChanged: {
                         if (active) {
-                            locationListItem.background = Color.create("#202020");
+                            locationListItem.background = Color.create("#303030");
                         } else {
                             locationListItem.background = Color.Transparent;
                         }

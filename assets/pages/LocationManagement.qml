@@ -81,10 +81,20 @@ Page {
                 ambientWeatherMainPage.changeLocation(locationData);
                 navigationPane.pop();
             }
+            
+            onRemoveLocation: {
+                console.log("# Deleting item " + locationData.display_name);
+                LocationManager.removeLocation(locationData);
+                storedLocationList.clearList();
+                var locationDataArray = new Array();
+                locationDataArray = LocationManager.getStoredLocations();
+                for (var index in locationDataArray) {
+                    storedLocationList.addToList(locationDataArray[index]);
+                }
+            }            
         }
 
         // long press
-        // add
         // delete
     }
     

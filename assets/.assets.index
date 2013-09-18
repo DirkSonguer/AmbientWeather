@@ -1,5 +1,5 @@
 1
-44
+47
 classes/flickrapi.js
 classes/locationapi.js
 classes/locationmanager.js
@@ -30,9 +30,12 @@ images/803_day.png
 images/803_night.png
 images/804.png
 images/ambient_weather_intro.jpg
+images/icon_accept.png
 images/icon_additem.png
 images/icon_close.png
 images/icon_currentlocation.png
+images/icon_delete.png
+images/icon_dismiss.png
 images/icon_managelocation.png
 images/icon_search.png
 images/icon_search_dimmed.png
