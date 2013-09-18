@@ -2,7 +2,9 @@
 // Weather Icon Component
 //
 // The component will display the respective weather
-// icon for a given weather code
+// icon for a given weather code. It will also do the
+// mapping of the weather condition to the respective
+// icons
 // *************************************************** //
 
 // import blackberry components
@@ -22,18 +24,21 @@ Container {
 
     // add bottom padding to show icon at same height as temperature
     bottomPadding: 20
-    
+
     // the actual weather icon
     ImageView {
         id: weatherIconImage
 
+        // default image for icon
         imageSource: "asset:///images/800_day.png"
     }
 
-    // a preview weather icon, only used for startup
+    // a preview weather icon
+    // this is only used for startup
     ImageView {
         id: weatherIconPreview
 
+        // default image for icon
         imageSource: "asset:///images/800_night.png"
     }
 
@@ -44,7 +49,7 @@ Container {
         // deactivate preview image
         weatherIconPreview.visible = false;
 
-        // calculate icon mode: day or night
+        // set icon mode: day or night
         var iconMode = "_" + weatherData.sys_daytime;
 
         // set actual icon according to weather id

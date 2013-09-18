@@ -1,3 +1,9 @@
+// *************************************************** //
+// New Location Page
+//
+// This is a sheet that handles adding a new location.
+// *************************************************** //
+
 // import blackberry components
 import bb.cascades 1.0
 

@@ -1,3 +1,12 @@
+// *************************************************** //
+// Background Image Component
+//
+// This is a component that provides full screen images
+// as well the logic for the transitions between
+// individual images
+// *************************************************** //
+
+// import blackberry components
 import bb.cascades 1.0
 
 // import url loader workaround
@@ -31,10 +40,6 @@ Container {
     layout: DockLayout {
     }
 
-    // image initially not visible
-    // will be set true as soon as Flickr data is available
-    // visible: false
-
     // local image slot
     ImageView {
         id: backgroundImageSlot0
@@ -49,12 +54,14 @@ Container {
         // loading indicator
         // signal if loading is complete
         onImageSourceChanged: {
+            // set transition targets to respective slots
             if (backgroundImageContainer.currentImageSlot == 1) {
                 fadeOut.target = backgroundImageSlot1;
             } else {
                 fadeOut.target = backgroundImageSlot2;
             }
 
+            // start transitions for both slots
             fadeIn.target = backgroundImageSlot0;
             fadeOut.play();
             fadeIn.play();
@@ -100,15 +107,20 @@ Container {
             }
         }
     }
-    
+
+    // new set of images received
     onImageDataArrayChanged: {
-        // set first image
+        // reset image
         backgroundImageContainer.currentImageIndex = 0;
+
+        // get first image and show it
         var imageData = imageDataArray[backgroundImageContainer.currentImageIndex];
         backgroundImageContainer.showImage("http://farm" + imageData.farm + ".staticflickr.com/" + imageData.server + "/" + imageData.id + "_" + imageData.secret + "_b.jpg");
     }
 
+    // next image was set
     onCurrentImageIndexChanged: {
+        // get and show next image
         var imageData = imageDataArray[backgroundImageContainer.currentImageIndex];
         backgroundImageContainer.showImage("http://farm" + imageData.farm + ".staticflickr.com/" + imageData.server + "/" + imageData.id + "_" + imageData.secret + "_b.jpg");
     }

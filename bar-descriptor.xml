@@ -94,6 +94,9 @@
         <include name="*.qm"/>
     </asset>
     
+    <!-- Set theme to dark as default -->
+    <env var="CASCADES_THEME" value="dark"/>
+    
     <!-- Request permission to execute native code.  Required for native applications. -->
     <permission system="true">run_native</permission>
     <permission>access_internet</permission>

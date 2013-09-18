@@ -7,7 +7,5 @@
 // *************************************************** //
 
 var currentApplicationVersion = "1.0.0";
-
 var flickrAPIKey = "ade5c803d5c7e7bc2012f2a0785f829c";
-
 var locationSearchRadius = 0.075;

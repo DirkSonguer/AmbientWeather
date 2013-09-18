@@ -1,3 +1,11 @@
+// *************************************************** //
+// Location List Component
+//
+// This component shows a list of locations and
+// provides signals for list manipulation and
+// interaction
+// *************************************************** //
+
 // import blackberry components
 import bb.cascades 1.0
 
@@ -6,7 +14,7 @@ Container {
 
     // signal to add a new item
     // item is given as type LocationData
-    signal addToList(variant locationItem)
+    signal addToList(variant locationData)
 
     // signal to clear the list contents
     signal clearList()
@@ -40,14 +48,23 @@ Container {
                     layout: StackLayout {
                         orientation: LayoutOrientation.TopToBottom
                     }
-
-                    // location name
-                    Label {
-                        textStyle.base: SystemDefaults.TextStyles.PrimaryText
-                        text: ListItemData.locationData.display_name
-                        multiline: true
+                    
+                    Container {
+                        // layour definition
+                        topPadding: 20
+                        bottomPadding: 15
+                        leftPadding: 10
+                        rightPadding: 10
+                        
+                        // location name
+                        Label {
+                            textStyle.base: SystemDefaults.TextStyles.PrimaryText
+                            text: ListItemData.locationData.display_name
+                            multiline: true
+                        }
                     }
 
+                    // tap gesture handler
                     gestureHandlers: [
                         // Add a handler for tap gestures
                         TapHandler {
@@ -64,6 +81,11 @@ Container {
                     // tap handling
                     // if item is tapped, change opacity
                     ListItem.onActivationChanged: {
+                        if (active) {
+                            locationListItem.background = Color.create("#202020");
+                        } else {
+                            locationListItem.background = Color.Transparent;
+                        }
                     }
                 }
             }
@@ -71,16 +93,16 @@ Container {
     }
 
     // signal to add a new item
-    // item is given as type InstagramCommentData
+    // item is given as type LocationData
     // the item data is simply added to the data list model
     onAddToList: {
         console.log("# Adding item");
         locationListDataModel.insert({
-                "locationData": locationItem
+                "locationData": locationData
             });
     }
 
-    // signal to clear the gallery contents
+    // signal to clear the list contents
     // all items are cleared from the data list model
     onClearList: {
         locationListDataModel.clear();
@@ -88,7 +110,7 @@ Container {
 
     // attached objects
     attachedObjects: [
-        // this will be the data model for the popular media list view
+        // this will be the data model for the location list view
         GroupDataModel {
             id: locationListDataModel
             sortedAscending: false

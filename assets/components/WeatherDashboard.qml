@@ -2,7 +2,8 @@
 // Weather Data Component
 //
 // The component will display the respective weather
-// data
+// data. It also features signals for setting and
+// resetting the data
 // *************************************************** //
 
 // import blackberry components
@@ -11,8 +12,14 @@ import bb.cascades 1.0
 Container {
     id: weatherDataComponent
 
+    // signal to set data for the dashboard
+    // data is given as type WeatherData
     signal setWeatherData(variant weatherData)
 
+    // reset dashboard data
+    signal resetDashboard()
+
+    // properties for external access of the data components
     property alias weatherLocation: weatherDataLocation.text
     property alias weatherCondition: weatherDataCondition.text
 
@@ -24,6 +31,7 @@ Container {
     verticalAlignment: VerticalAlignment.Bottom
     horizontalAlignment: HorizontalAlignment.Right
 
+    // icon container
     Container {
         layout: StackLayout {
             orientation: LayoutOrientation.LeftToRight
@@ -32,6 +40,7 @@ Container {
         horizontalAlignment: HorizontalAlignment.Right
         verticalAlignment: VerticalAlignment.Bottom
 
+        // main weather icon
         WeatherIcon {
             id: weatherDataIcon
 
@@ -40,7 +49,7 @@ Container {
             verticalAlignment: VerticalAlignment.Bottom
         }
 
-        // the label for the header
+        // the label for the temperature
         Label {
             id: weatherDataTemperature
 
@@ -58,21 +67,21 @@ Container {
         }
     }
 
-    // the label for the current condition
+    // the label for the current weather condition
     Label {
         id: weatherDataCondition
-        
+
         // layout definition
         textStyle.base: SystemDefaults.TextStyles.BodyText
         horizontalAlignment: HorizontalAlignment.Right
         textStyle.color: Color.White
         topMargin: 0
         bottomMargin: 0
-        
+
         text: "Getting data for position.."
     }
 
-    // the label for the given location
+    // the label for the given location data
     Label {
         id: weatherDataLocation
 
@@ -90,10 +99,18 @@ Container {
         multiline: true
     }
 
+    // set weather data for dashboard
     onSetWeatherData: {
         weatherDataTemperature.text = Math.round(weatherData.main_temp - 273.15) + "°";
         weatherDataCondition.text = weatherData.weather_description + " in";
         weatherDataLocation.text = weatherData.name;
         weatherDataIcon.weatherData = weatherData;
+    }
+
+    // reset weather data for dashboard
+    onResetDashboard: {
+        weatherDataTemperature.text = "";
+        weatherDataCondition.text = "Loading weather data.."
+        weatherDataLocation.text = "Please wait"
     }
 }

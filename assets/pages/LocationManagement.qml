@@ -1,3 +1,11 @@
+// *************************************************** //
+// Location Management Page
+//
+// This is the page that handles the location management
+// and implements the header, list, menus and calling
+// the respective functionalities.
+// *************************************************** //
+
 // import blackberry components
 import bb.cascades 1.0
 
@@ -59,10 +67,13 @@ Page {
 
         // divider for the individual list items
         Divider {
+            bottomMargin: 0
         }
 
         LocationList {
             id: storedLocationList
+            
+            topMargin: 0
             
             onLocationClicked: {
                 console.log("# Setting active item " + locationData.display_name);

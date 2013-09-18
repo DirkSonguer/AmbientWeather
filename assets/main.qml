@@ -1,3 +1,12 @@
+// *************************************************** //
+// Main Page
+//
+// This is the main page of the AmbientWeather application
+// It contains the main page components as well as the
+// orchestration locig.
+// *************************************************** //
+
+// import blackberry components
 import bb.cascades 1.0
 
 // import geolocation services
@@ -28,9 +37,10 @@ NavigationPane {
         property variant currentGeolocation
 
         // property for the weather for current location
+        // this is of type LocationData
         property variant currentWeatherdata
 
-        // the current index of the available images
+        // the current search radius for images
         // this might change dynamically if no images are found and the radius is widened
         property real currentLocationSearchRadius: Globals.locationSearchRadius
 
@@ -42,7 +52,8 @@ NavigationPane {
         signal weatherDataLoaded(variant weatherData)
         signal weatherDataError(variant errorData)
 
-        // change location
+        // change location signal
+        // this will be called by other pages if a new location should be used
         signal changeLocation(variant locationData)
 
         Container {
@@ -50,15 +61,17 @@ NavigationPane {
             }
 
             // background image
-            // the component also contains the logic for changing images
-            // and their transitions
+            // the component also contains the logic for changing images and their transitions
             BackgroundImage {
                 id: backgroundImage
             }
 
+            // weather dashboard
+            // this contains all components for showing weather data and icons
             WeatherDashboard {
                 id: weatherDashboard
 
+                // bottom padding is dynamic according to screen size
                 bottomPadding: (DisplayInfo.height / 10)
                 rightPadding: 20
             }
@@ -69,13 +82,15 @@ NavigationPane {
                     title: "Ambient Weather"
                     subtitle: "Where are you?"
 
+                    // use current location
                     ActionItem {
                         title: "Use my current location"
-                        imageSource: "asset:///images/icon_changelocation.png"
+                        imageSource: "asset:///images/icon_currentlocation.png"
 
-                        // reload popular media stream on click
+                        // action called
                         onTriggered: {
                             console.log("# Getting current location");
+
                             // stop position query just to make sure it doesn't run anymore
                             positionSource.stop();
 
@@ -83,18 +98,19 @@ NavigationPane {
                             weatherDashboard.weatherLocation = "Ambient Weather";
                             weatherDashboard.weatherCondition = "Getting your position..";
 
+                            // reset the current location if one was previously set
                             LocationManager.resetActiveLocation();
 
-                            console.log("# Starting location fix");
+                            // start getting location
                             positionSource.start();
                         }
                     }
-                    // change current location
+                    // change current location from manual list
                     ActionItem {
                         title: "Choose location manually"
                         imageSource: "asset:///images/icon_managelocation.png"
 
-                        // switch to location list
+                        // switch to location list page
                         onTriggered: {
                             var locationManagementPage = locationManagementComponent.createObject();
                             navigationPane.push(locationManagementPage);
@@ -109,16 +125,24 @@ NavigationPane {
             // loading default image
             backgroundImage.showLocalImage("asset:///images/ambient_weather_intro.jpg");
 
+            //  get  available, stored locations
             var activeLocation = new Array;
             activeLocation = LocationManager.getActiveLocation();
 
+            // check if an active location is set
             if (activeLocation.display_name != null) {
                 console.log("# Using active location " + activeLocation.display_name);
-                // start loading weather data for location
-                weatherDashboard.weatherCondition = "Loading weather data..";
+
+                // reset weather background image and dashboard
+                backgroundImage.showLocalImage("asset:///images/ambient_weather_intro.jpg");
+                weatherDashboard.resetDashboard();
+
+                // create geolocation object and fill it with location data
                 var locationCoordinates = new GeolocationData.GeolocationData;
                 locationCoordinates.latitude = activeLocation.lat;
                 locationCoordinates.longitude = activeLocation.lon;
+
+                // set location data and load weather data
                 ambientWeatherMainPage.currentGeolocation = locationCoordinates;
                 WeatherAPI.getWeatherData(ambientWeatherMainPage.currentGeolocation, ambientWeatherMainPage);
             } else {
@@ -129,41 +153,47 @@ NavigationPane {
 
         // change location
         onChangeLocation: {
-            // loading default image
+            // reset weather background image and dashboard
             backgroundImage.showLocalImage("asset:///images/ambient_weather_intro.jpg");
-            
-                weatherDashboard.weatherCondition = "Loading weather data..";
-                var locationCoordinates = new GeolocationData.GeolocationData;
-                locationCoordinates.latitude = locationData.lat;
-                locationCoordinates.longitude = locationData.lon;
-                ambientWeatherMainPage.currentGeolocation = locationCoordinates;
-                WeatherAPI.getWeatherData(ambientWeatherMainPage.currentGeolocation, ambientWeatherMainPage);
+            weatherDashboard.resetDashboard();
+
+            // create geolocation object and fill it with location data
+            var locationCoordinates = new GeolocationData.GeolocationData;
+            locationCoordinates.latitude = locationData.lat;
+            locationCoordinates.longitude = locationData.lon;
+
+            // set location data and load weather data
+            ambientWeatherMainPage.currentGeolocation = locationCoordinates;
+            WeatherAPI.getWeatherData(ambientWeatherMainPage.currentGeolocation, ambientWeatherMainPage);
         }
 
+        // image data loaded from flickr
         onImageDataLoaded: {
+            // check if images exist for location
             if (imageDataArray.length > 0) {
                 console.log("# Found " + imageDataArray.length + " images for location " + ambientWeatherMainPage.currentGeolocation.latitude + " / " + ambientWeatherMainPage.currentGeolocation.longitude);
 
                 // fill global image array with data
                 backgroundImage.imageDataArray = imageDataArray;
 
-                // reset search radius
+                // reset search radius (this may have been changed)
                 ambientWeatherMainPage.currentLocationSearchRadius = Globals.locationSearchRadius;
             } else {
                 console.log("# No images found for location " + ambientWeatherMainPage.currentGeolocation.latitude + " / " + ambientWeatherMainPage.currentGeolocation.longitude);
 
                 // extend search radius and search again
                 ambientWeatherMainPage.currentLocationSearchRadius += Globals.locationSearchRadius;
-                console.log("# Extending search radius to " + ambientWeatherMainPage.currentLocationSearchRadius);
                 FlickrAPI.getFlickrSearchResults(ambientWeatherMainPage.currentGeolocation, ambientWeatherMainPage.currentWeatherdata, ambientWeatherMainPage.currentLocationSearchRadius, ambientWeatherMainPage);
             }
         }
 
+        // weather data loaded from openweathermap
         onWeatherDataLoaded: {
+            // store weather data in page component
+            ambientWeatherMainPage.currentWeatherdata = weatherData;
+
             // load weather data into component
             weatherDashboard.setWeatherData(weatherData);
-
-            ambientWeatherMainPage.currentWeatherdata = weatherData;
 
             // load images for location
             FlickrAPI.getFlickrSearchResults(ambientWeatherMainPage.currentGeolocation, weatherData, ambientWeatherMainPage.currentLocationSearchRadius, ambientWeatherMainPage);
