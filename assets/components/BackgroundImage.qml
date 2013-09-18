@@ -26,6 +26,9 @@ Container {
 
     // signal that loading process is done
     signal imageLoadingDone(int imageSlot)
+    
+    // signal that orientation has changed
+    signal orientationChanged(int width, int height)
 
     // array containing all found image items
     // for the current geolocation
@@ -157,6 +160,16 @@ Container {
 
         fadeOut.play();
         fadeIn.play();
+    }
+    
+    onOrientationChanged: {
+        console.log("# New orientation! Width is now " + width + " and height is now " + height);
+        backgroundImageSlot0.preferredWidth = width;
+        backgroundImageSlot0.preferredHeight = height;
+        backgroundImageSlot1.preferredWidth = width;
+        backgroundImageSlot1.preferredHeight = height;
+        backgroundImageSlot2.preferredWidth = width;
+        backgroundImageSlot2.preferredHeight = height;
     }
 
     // attach components to page

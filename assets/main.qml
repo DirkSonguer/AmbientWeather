@@ -226,6 +226,20 @@ NavigationPane {
                         WeatherAPI.getWeatherData(ambientWeatherMainPage.currentGeolocation, ambientWeatherMainPage);
                     }
                 }
+            },
+            OrientationHandler {
+                id: orientationHandler
+                onOrientationAboutToChange: {
+                    if (orientation == UIOrientation.Portrait) {
+                        backgroundImage.orientationChanged(DisplayInfo.width, DisplayInfo.height);
+                    } else if (orientation == UIOrientation.Landscape) {
+                        backgroundImage.orientationChanged(DisplayInfo.height, DisplayInfo.width);
+                    }
+                }
+                onOrientationChanged: {
+                    // Any additional changes to be performed after the orientation
+                    // change has occured.
+                }
             }
         ]
     }
