@@ -53,7 +53,7 @@ Container {
         preferredWidth: DisplayInfo.width
         preferredHeight: DisplayInfo.height
         visible: false
-
+        
         // loading indicator
         // signal if loading is complete
         onImageSourceChanged: {
@@ -132,7 +132,19 @@ Container {
     // this will trigger the loading process, which in turn
     // calls imageLoadingDone with the respective slot
     onShowLocalImage: {
+        imageSwitchTimer.stop();
         backgroundImageSlot0.imageSource = imageURL;
+        // set transition targets to respective slots
+        if (backgroundImageContainer.currentImageSlot == 1) {
+            fadeOut.target = backgroundImageSlot1;
+        } else {
+            fadeOut.target = backgroundImageSlot2;
+        }
+        
+        // start transitions for both slots
+        fadeIn.target = backgroundImageSlot0;
+        fadeOut.play();
+        fadeIn.play();
     }
 
     // set new image url to slot that is currently not in use
@@ -163,7 +175,7 @@ Container {
     }
     
     onOrientationChanged: {
-        console.log("# New orientation! Width is now " + width + " and height is now " + height);
+        // console.log("# New orientation! Width is now " + width + " and height is now " + height);
         backgroundImageSlot0.preferredWidth = width;
         backgroundImageSlot0.preferredHeight = height;
         backgroundImageSlot1.preferredWidth = width;
@@ -215,7 +227,7 @@ Container {
             }
 
             onEnded: {
-                console.log("# Image loading done and visible. Starting timer");
+                // console.log("# Image loading done and visible. Starting timer");
                 imageSwitchTimer.start();
             }
         }

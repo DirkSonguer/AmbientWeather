@@ -89,7 +89,7 @@ NavigationPane {
 
                         // action called
                         onTriggered: {
-                            console.log("# Getting current location");
+                            // console.log("# Getting current location");
 
                             // stop position query just to make sure it doesn't run anymore
                             positionSource.stop();
@@ -131,7 +131,7 @@ NavigationPane {
 
             // check if an active location is set
             if (activeLocation.display_name != null) {
-                console.log("# Using active location " + activeLocation.display_name);
+                // console.log("# Using active location " + activeLocation.display_name);
 
                 // reset weather background image and dashboard
                 backgroundImage.showLocalImage("asset:///images/ambient_weather_intro.jpg");
@@ -146,13 +146,14 @@ NavigationPane {
                 ambientWeatherMainPage.currentGeolocation = locationCoordinates;
                 WeatherAPI.getWeatherData(ambientWeatherMainPage.currentGeolocation, ambientWeatherMainPage);
             } else {
-                console.log("# No active location set, starting location fix");
+                // console.log("# No active location set, starting location fix");
                 positionSource.start()
             }
         }
 
         // change location
         onChangeLocation: {
+            // console.log("# Location changed !");
             // reset weather background image and dashboard
             backgroundImage.showLocalImage("asset:///images/ambient_weather_intro.jpg");
             weatherDashboard.resetDashboard();
@@ -171,7 +172,7 @@ NavigationPane {
         onImageDataLoaded: {
             // check if images exist for location
             if (imageDataArray.length > 0) {
-                console.log("# Found " + imageDataArray.length + " images for location " + ambientWeatherMainPage.currentGeolocation.latitude + " / " + ambientWeatherMainPage.currentGeolocation.longitude);
+                // console.log("# Found " + imageDataArray.length + " images for location " + ambientWeatherMainPage.currentGeolocation.latitude + " / " + ambientWeatherMainPage.currentGeolocation.longitude);
 
                 // fill global image array with data
                 backgroundImage.imageDataArray = imageDataArray;
@@ -179,7 +180,7 @@ NavigationPane {
                 // reset search radius (this may have been changed)
                 ambientWeatherMainPage.currentLocationSearchRadius = Globals.locationSearchRadius;
             } else {
-                console.log("# No images found for location " + ambientWeatherMainPage.currentGeolocation.latitude + " / " + ambientWeatherMainPage.currentGeolocation.longitude);
+                // console.log("# No images found for location " + ambientWeatherMainPage.currentGeolocation.latitude + " / " + ambientWeatherMainPage.currentGeolocation.longitude);
 
                 // extend search radius and search again
                 ambientWeatherMainPage.currentLocationSearchRadius += Globals.locationSearchRadius;
@@ -213,7 +214,7 @@ NavigationPane {
 
                     // check if location was really fixed
                     if (! ambientWeatherMainPage.currentGeolocation) {
-                        console.log("# Location could not be fixed");
+                        // console.log("# Location could not be fixed");
                         weatherDashboard.weatherCondition = "Could not get your location :(";
                     } else {
                         console.debug("# Location found: " + ambientWeatherMainPage.currentGeolocation.latitude, ambientWeatherMainPage.currentGeolocation.longitude);

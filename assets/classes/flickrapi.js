@@ -11,7 +11,7 @@ Qt.include(dirPaths.assetPath + "/classes/networkhandler.js");
 Qt.include(dirPaths.assetPath + "/structures/flickrimagedata.js");
 
 function getFlickrSearchResults(currentGeolocation, currentWeatherData, currentSearchRadius, callingPage) {
-	console.log("# Searching for Flickr image items for lat: " + currentGeolocation.latitude + " and lon: " + currentGeolocation.longitude + " with search radius " + currentSearchRadius);
+	// console.log("# Searching for Flickr image items for lat: " + currentGeolocation.latitude + " and lon: " + currentGeolocation.longitude + " with search radius " + currentSearchRadius);
 
 	var req = new XMLHttpRequest();
 	req.onreadystatechange = function() {
@@ -20,7 +20,7 @@ function getFlickrSearchResults(currentGeolocation, currentWeatherData, currentS
 
 		// jsonObject contains either false or the http result as object
 		if (jsonObject) {
-			console.log("# Analysing Flickr data");
+			// console.log("# Analysing Flickr data");
 
 			// prepare return object
 			var imageDataArray = new Array();
@@ -81,7 +81,7 @@ function getFlickrSearchResults(currentGeolocation, currentWeatherData, currentS
 	url += "," + (currentGeolocation.longitude + currentSearchRadius);
 	url += "," + (currentGeolocation.latitude + currentSearchRadius);
 	// weatherData.weather_description
-	console.log("# URL for flickr image call: " + url);
+	// console.log("# URL for flickr image call: " + url);
 
 	req.open("GET", url, true);
 	req.send();

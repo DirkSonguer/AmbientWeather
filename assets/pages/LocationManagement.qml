@@ -76,14 +76,14 @@ Page {
             topMargin: 0
             
             onLocationClicked: {
-                console.log("# Setting active item " + locationData.display_name);
+                // console.log("# Setting active item " + locationData.display_name);
                 LocationManager.setActiveLocation(locationData);
                 ambientWeatherMainPage.changeLocation(locationData);
                 navigationPane.pop();
             }
             
             onRemoveLocation: {
-                console.log("# Deleting item " + locationData.display_name);
+                // console.log("# Deleting item " + locationData.display_name);
                 LocationManager.removeLocation(locationData);
                 storedLocationList.clearList();
                 var locationDataArray = new Array();
@@ -99,7 +99,7 @@ Page {
     }
     
     onCreationCompleted: {
-        console.log("# Loading location list");
+        // console.log("# Loading location list");
         storedLocationList.clearList();
         var locationDataArray = new Array();
         locationDataArray = LocationManager.getStoredLocations();
@@ -109,7 +109,7 @@ Page {
     }
 
     onAddNewLocation: {
-        console.log("# Adding new location " + locationData.display_name);
+        // console.log("# Adding new location " + locationData.display_name);
         LocationManager.storeNewLocation(locationData);
         storedLocationList.clearList();
         var locationDataArray = new Array();

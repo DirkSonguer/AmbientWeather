@@ -44,7 +44,7 @@ Container {
 
     // set weather icon according to weather data contents
     onWeatherDataChanged: {
-        console.log("# Weather code changed to " + weatherData.weather_id);
+        // console.log("# Weather code changed to " + weatherData.weather_id);
 
         // deactivate preview image
         weatherIconPreview.visible = false;

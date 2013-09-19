@@ -57,7 +57,7 @@ Page {
                     submitKey: SubmitKey.Submit
                     onSubmitted: {
                         if (submitter.text.length > 0) {
-                            console.log("# Searching location: " + submitter.text);
+                            // console.log("# Searching location: " + submitter.text);
                             LocationAPI.getLocationDataForName(submitter.text, newLocationPage);
                         }
                     }

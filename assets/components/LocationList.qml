@@ -130,7 +130,7 @@ Container {
     // item is given as type LocationData
     // the item data is simply added to the data list model
     onAddToList: {
-        console.log("# Adding item");
+        // console.log("# Adding item");
         locationListDataModel.insert({
                 "locationData": locationData
             });

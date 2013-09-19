@@ -8,7 +8,7 @@
 //include other scripts used here
 
 function getStoredLocations() {
-	console.log("# Getting all stored locations");
+	// console.log("# Getting all stored locations");
 
 	var db = openDatabaseSync("AmbientWeather", "1.0", "AmbientWeather persistent data storage", 16);
 
@@ -25,7 +25,7 @@ function getStoredLocations() {
 			for ( var i = 0; i < rs.rows.length; i++) {
 				locationItem = rs.rows.item(i);
 				locationDataArray.push(locationItem);
-				console.log("# Found location item in db " + locationItem.display_name);
+				// console.log("# Found location item in db " + locationItem.display_name);
 			}
 		}
 	});
@@ -34,7 +34,7 @@ function getStoredLocations() {
 }
 
 function getActiveLocation() {
-	console.log("# Getting active location");
+	// console.log("# Getting active location");
 
 	var db = openDatabaseSync("AmbientWeather", "1.0", "AmbientWeather persistent data storage", 16);
 
@@ -50,7 +50,7 @@ function getActiveLocation() {
 		var rs = tx.executeSql(dataStr, data);
 		if (rs.rows.length > 0) {
 			locationItem = rs.rows.item(0);
-			console.log("# Found active location item in db " + locationItem.display_name);
+			// console.log("# Found active location item in db " + locationItem.display_name);
 		}
 	});
 
@@ -58,7 +58,7 @@ function getActiveLocation() {
 }
 
 function storeNewLocation(locationData) {
-	console.log("# Storing location " + locationData.display_name);
+	// console.log("# Storing location " + locationData.display_name);
 
 	var db = openDatabaseSync("AmbientWeather", "1.0", "AmbientWeather persistent data storage", 16);
 
@@ -72,7 +72,7 @@ function storeNewLocation(locationData) {
 	db.transaction(function(tx) {
 		var rs = tx.executeSql(dataStr, data);
 		if (rs.rows.length > 0) {
-			console.log("# Found " + rs.rows.length + " already existing entries with this ID");
+			// console.log("# Found " + rs.rows.length + " already existing entries with this ID");
 			foundLocations = rs.rows.length;
 		}
 	});
@@ -91,7 +91,7 @@ function storeNewLocation(locationData) {
 }
 
 function removeLocation(locationData) {
-	console.log("# Removing location " + locationData.display_name);
+	// console.log("# Removing location " + locationData.display_name);
 
 	var db = openDatabaseSync("AmbientWeather", "1.0", "AmbientWeather persistent data storage", 16);
 
@@ -107,7 +107,7 @@ function removeLocation(locationData) {
 }
 
 function removeAllLocations(locationData) {
-	console.log("# Removing all locations");
+	// console.log("# Removing all locations");
 
 	var db = openDatabaseSync("AmbientWeather", "1.0", "AmbientWeather persistent data storage", 16);
 
@@ -117,7 +117,7 @@ function removeAllLocations(locationData) {
 }
 
 function setActiveLocation(locationData) {
-	console.log("# Setting active location " + locationData.display_name);
+	// console.log("# Setting active location " + locationData.display_name);
 
 	var db = openDatabaseSync("AmbientWeather", "1.0", "AmbientWeather persistent data storage", 16);
 
@@ -141,7 +141,7 @@ function setActiveLocation(locationData) {
 }
 
 function resetActiveLocation() {
-	console.log("# Resetting active location");
+	// console.log("# Resetting active location");
 
 	var db = openDatabaseSync("AmbientWeather", "1.0", "AmbientWeather persistent data storage", 16);
 

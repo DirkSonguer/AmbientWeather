@@ -11,7 +11,7 @@ Qt.include(dirPaths.assetPath + "/classes/networkhandler.js");
 Qt.include(dirPaths.assetPath + "/structures/locationdata.js");
 
 function getLocationDataForCoordinates(currentGeolocation, callingPage) {
-	console.log("# Searching for location data for lat: " + currentGeolocation.latitude + " and lon: " + currentGeolocation.longitude);
+	// console.log("# Searching for location data for lat: " + currentGeolocation.latitude + " and lon: " + currentGeolocation.longitude);
 
 	var req = new XMLHttpRequest();
 	req.onreadystatechange = function() {
@@ -20,7 +20,7 @@ function getLocationDataForCoordinates(currentGeolocation, callingPage) {
 
 		// jsonObject contains either false or the http result as object
 		if (jsonObject) {
-			console.log("# Analysing location data");
+			// console.log("# Analysing location data");
 
 			// prepare return object
 			var locationItem = new LocationData();
@@ -69,14 +69,14 @@ function getLocationDataForCoordinates(currentGeolocation, callingPage) {
 	url += "&zoom=6";
 	url += "&lat=" + currentGeolocation.latitude;
 	url += "&lon=" + currentGeolocation.longitude;
-	console.log("# URL for location data call: " + url);
+	// console.log("# URL for location data call: " + url);
 
 	req.open("GET", url, true);
 	req.send();
 }
 
 function getLocationDataForName(currentLocationName, callingPage) {
-	console.log("# Searching for location data for name: " + currentLocationName);
+	// console.log("# Searching for location data for name: " + currentLocationName);
 
 	var req = new XMLHttpRequest();
 	req.onreadystatechange = function() {
@@ -85,7 +85,7 @@ function getLocationDataForName(currentLocationName, callingPage) {
 
 		// jsonObject contains either false or the http result as object
 		if (jsonObject) {
-			console.log("# Analysing location data");
+			// console.log("# Analysing location data");
 
 			var locationDataArray = new Array();
 
@@ -105,11 +105,11 @@ function getLocationDataForName(currentLocationName, callingPage) {
 					locationItem.osm_type = jsonObject[index].osm_type;
 
 					locationDataArray.push(locationItem);
-					console.log("# Found city: " + locationItem.display_name);
+					// console.log("# Found city: " + locationItem.display_name);
 				}
 			}
 
-			console.log("# Done loading location data. Found " + locationDataArray.length + " locations");
+			// console.log("# Done loading location data. Found " + locationDataArray.length + " locations");
 			callingPage.locationDataLoaded(locationDataArray);
 		} else {
 			// either the request is not done yet or an error occured
@@ -130,7 +130,7 @@ function getLocationDataForName(currentLocationName, callingPage) {
 	url += "?format=json";
 	url += "&q=" + currentLocationName;
 	url += "&limit=10";
-	console.log("# URL for location data call: " + url);
+	// console.log("# URL for location data call: " + url);
 
 	req.open("GET", url, true);
 	req.send();

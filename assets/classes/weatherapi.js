@@ -11,7 +11,7 @@ Qt.include(dirPaths.assetPath + "/classes/networkhandler.js");
 Qt.include(dirPaths.assetPath + "/structures/weatherdata.js");
 
 function getWeatherData(currentGeolocation, callingPage) {
-	console.log("# Searching for weather data for lat: " + currentGeolocation.latitude + " and lon: " + currentGeolocation.longitude);
+	// console.log("# Searching for weather data for lat: " + currentGeolocation.latitude + " and lon: " + currentGeolocation.longitude);
 
 	var req = new XMLHttpRequest();
 	req.onreadystatechange = function() {
@@ -20,7 +20,7 @@ function getWeatherData(currentGeolocation, callingPage) {
 
 		// jsonObject contains either false or the http result as object
 		if (jsonObject) {
-			console.log("# Analysing weather data");
+			// console.log("# Analysing weather data");
 
 			// prepare return object
 			var weatherItem = new WeatherData();
@@ -48,7 +48,7 @@ function getWeatherData(currentGeolocation, callingPage) {
 	        } else {
 	        	weatherItem.sys_daytime = "night";
 	        }
-	        console.log("# Sunrise is " + weatherItem.sys_sunrise + ", sunset is " + weatherItem.sys_sunset + ", current time is " + currentTimestamp + ", switching to mode " + weatherItem.sys_daytime);
+	        // console.log("# Sunrise is " + weatherItem.sys_sunrise + ", sunset is " + weatherItem.sys_sunset + ", current time is " + currentTimestamp + ", switching to mode " + weatherItem.sys_daytime);
 
 			// weather data
 			weatherItem.weather_id = jsonObject.weather[0].id;
@@ -90,7 +90,7 @@ function getWeatherData(currentGeolocation, callingPage) {
 	var url = "http://api.openweathermap.org/data/2.5/weather";
 	url += "?lat=" + currentGeolocation.latitude;
 	url += "&lon=" + currentGeolocation.longitude;
-	console.log("# URL for weather data call: " + url);
+	// console.log("# URL for weather data call: " + url);
 
 	req.open("GET", url, true);
 	req.send();
