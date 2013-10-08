@@ -125,6 +125,11 @@ NavigationPane {
             // loading default image
             backgroundImage.showLocalImage("asset:///images/ambient_weather_intro.jpg");
 
+            // create default cover
+            var applicationCover = defaultCover.createObject();
+            applicationCover.resetDashboard();
+            Application.cover = applicationCover;
+
             //  get  available, stored locations
             var activeLocation = new Array;
             activeLocation = LocationManager.getActiveLocation();
@@ -157,6 +162,11 @@ NavigationPane {
             // reset weather background image and dashboard
             backgroundImage.showLocalImage("asset:///images/ambient_weather_intro.jpg");
             weatherDashboard.resetDashboard();
+
+            // reset default cover with new data
+            var applicationCover = defaultCover.createObject();
+            applicationCover.resetDashboard();
+            Application.cover = applicationCover;
 
             // create geolocation object and fill it with location data
             var locationCoordinates = new GeolocationData.GeolocationData;
@@ -195,6 +205,11 @@ NavigationPane {
 
             // load weather data into component
             weatherDashboard.setWeatherData(weatherData);
+
+            // reset default cover with new data
+            var applicationCover = defaultCover.createObject();
+            applicationCover.setWeatherData(weatherData);
+            Application.cover = applicationCover;
 
             // load images for location
             FlickrAPI.getFlickrSearchResults(ambientWeatherMainPage.currentGeolocation, weatherData, ambientWeatherMainPage.currentLocationSearchRadius, ambientWeatherMainPage);
@@ -237,6 +252,10 @@ NavigationPane {
                         backgroundImage.orientationChanged(DisplayInfo.height, DisplayInfo.width);
                     }
                 }
+            },
+            ComponentDefinition {
+                id: defaultCover
+                source: "covers/DefaultCover.qml"
             }
         ]
     }

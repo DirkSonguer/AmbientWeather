@@ -111,12 +111,11 @@ Page {
     onAddNewLocation: {
         // console.log("# Adding new location " + locationData.display_name);
         LocationManager.storeNewLocation(locationData);
-        storedLocationList.clearList();
-        var locationDataArray = new Array();
-        locationDataArray = LocationManager.getStoredLocations();
-        for (var index in locationDataArray) {
-            storedLocationList.addToList(locationDataArray[index]);
-        }
+
+        // console.log("# Setting active item " + locationData.display_name);
+        LocationManager.setActiveLocation(locationData);
+        ambientWeatherMainPage.changeLocation(locationData);
+        navigationPane.pop();
     }
 
     // attached objects

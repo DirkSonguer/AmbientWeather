@@ -1,0 +1,10 @@
+
+1.1.0
+
+* Added: Cover that shows weather information when in card mode
+* Optimized: Message if no location could not be found
+
+
+1.0.0
+
+* Initial version

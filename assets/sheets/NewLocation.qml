@@ -58,6 +58,7 @@ Page {
                     onSubmitted: {
                         if (submitter.text.length > 0) {
                             // console.log("# Searching location: " + submitter.text);
+                            searchNoItems.visible = false;
                             LocationAPI.getLocationDataForName(submitter.text, newLocationPage);
                         }
                     }
@@ -78,10 +79,31 @@ Page {
         // divider
         Divider {
         }
-        
+
+        // container for error / info messages
+        Container {
+            // layout definition
+            verticalAlignment: VerticalAlignment.Center
+            horizontalAlignment: HorizontalAlignment.Center
+
+            // results text
+            Label {
+                id: searchNoItems
+
+                // set initial visibility to false
+                visible: false;
+
+                // content
+                text: qsTr("Could not find any location with this name, sorry")
+                textStyle.base: SystemDefaults.TextStyles.BigText
+                multiline: true
+            }
+        }
+
+        // location list component
         LocationList {
             id: locationList
-            
+
             onLocationClicked: {
                 locationManagementPage.addNewLocation(locationData);
                 newLocationSheet.close();
@@ -93,7 +115,15 @@ Page {
         locationList.clearList();
         for (var index in locationDataArray) {
             locationList.addToList(locationDataArray[index]);
-        }   
+        }
+
+        if (locationDataArray.length < 1) {
+            searchNoItems.visible = true;
+        }
+    }
+
+    onLocationDataError: {
+        searchNoItems.visible = true;
     }
 
     // close action for the sheet

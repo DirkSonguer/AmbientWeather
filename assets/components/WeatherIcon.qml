@@ -30,7 +30,7 @@ Container {
         id: weatherIconImage
 
         // default image for icon
-        imageSource: "asset:///images/800_day.png"
+        imageSource: "asset:///images/intro_day.png"
     }
 
     // a preview weather icon
@@ -39,7 +39,7 @@ Container {
         id: weatherIconPreview
 
         // default image for icon
-        imageSource: "asset:///images/800_night.png"
+        imageSource: "asset:///images/intro_night.png"
     }
 
     // set weather icon according to weather data contents
@@ -54,6 +54,7 @@ Container {
 
         // set actual icon according to weather id
         switch (weatherData.weather_id) {
+            // thunderstorm
             case 200:
             case 201:
             case 202:
@@ -64,12 +65,14 @@ Container {
                 weatherIconImage.imageSource = "asset:///images/200.png";
                 break;
 
+            // heavy thunderstorm
             case 212:
             case 230:
             case 232:
                 weatherIconImage.imageSource = "asset:///images/212.png";
                 break;
 
+            // drizzle
             case 300:
             case 301:
             case 302:
@@ -78,21 +81,25 @@ Container {
                 weatherIconImage.imageSource = "asset:///images/300.png";
                 break;
 
+            // heavy drizzle
             case 312:
             case 321:
                 weatherIconImage.imageSource = "asset:///images/312.png";
                 break;
 
+            // light rain
             case 500:
                 weatherIconImage.imageSource = "asset:///images/300.png";
                 break;
 
+            // rain
             case 501:
             case 520:
             case 521:
                 weatherIconImage.imageSource = "asset:///images/501.png";
                 break;
 
+            // heavy rain
             case 502:
             case 503:
             case 504:
@@ -100,46 +107,50 @@ Container {
                 weatherIconImage.imageSource = "asset:///images/502.png";
                 break;
 
+            // freezing rain
             case 511:
                 weatherIconImage.imageSource = "asset:///images/511.png";
                 break;
 
+            // snow
             case 600:
             case 601:
                 weatherIconImage.imageSource = "asset:///images/600.png";
                 break;
 
+            // heavy snow
             case 602:
                 weatherIconImage.imageSource = "asset:///images/602.png";
                 break;
 
+            // shower snow
             case 611:
             case 621:
-                weatherIconImage.imageSource = "asset:///images/621.png";
+                weatherIconImage.imageSource = "asset:///images/511.png";
                 break;
 
+            // mist / fog
             case 701:
             case 711:
             case 721:
             case 731:
             case 741:
-                weatherIconImage.imageSource = "asset:///images/803" + iconMode + ".png";
+                weatherIconImage.imageSource = "asset:///images/700.png";
                 break;
 
+// clear
             case 800:
                 weatherIconImage.imageSource = "asset:///images/800" + iconMode + ".png";
                 break;
 
+// few clouds
             case 801:
                 weatherIconImage.imageSource = "asset:///images/801" + iconMode + ".png";
                 break;
 
             case 802:
-                weatherIconImage.imageSource = "asset:///images/802" + iconMode + ".png";
-                break;
-
             case 803:
-                weatherIconImage.imageSource = "asset:///images/803" + iconMode + ".png";
+                weatherIconImage.imageSource = "asset:///images/802" + iconMode + ".png";
                 break;
 
             case 804:
