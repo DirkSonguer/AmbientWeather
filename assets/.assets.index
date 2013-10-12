@@ -1,10 +1,10 @@
 1
-59
-classes/configurationmanager.js
+60
 classes/flickrapi.js
 classes/locationapi.js
 classes/locationmanager.js
 classes/networkhandler.js
+classes/settingsmanager.js
 classes/swipehandler.js
 classes/weatherapi.js
 components/BackgroundImage.qml
@@ -53,7 +53,8 @@ main.qml
 pages/LocationManagement.qml
 sheets/About.qml
 sheets/NewLocation.qml
-structures/applicationconfiguration.js
+sheets/Settings.qml
+structures/applicationsettings.js
 structures/errordata.js
 structures/flickrimagedata.js
 structures/geolocationdata.js

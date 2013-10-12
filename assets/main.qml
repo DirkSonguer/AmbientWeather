@@ -25,6 +25,7 @@ import "classes/locationapi.js" as LocationAPI
 import "classes/weatherapi.js" as WeatherAPI
 import "classes/locationmanager.js" as LocationManager
 import "classes/swipehandler.js" as SwipeHandler
+import "classes/settingsmanager.js" as SettingsManager
 import "structures/geolocationdata.js" as GeolocationData
 
 NavigationPane {
@@ -45,6 +46,8 @@ NavigationPane {
         // this might change dynamically if no images are found and the radius is widened
         property real currentLocationSearchRadius: Globals.locationSearchRadius
 
+        property variant currentApplicationSettings
+
         // flickr api signals
         signal imageDataLoaded(variant imageDataArray)
         signal imageDataError(variant errorData)
@@ -56,6 +59,8 @@ NavigationPane {
         // change location signal
         // this will be called by other pages if a new location should be used
         signal changeLocation(variant locationData)
+
+        signal updateApplicationSettings()
 
         Container {
             layout: DockLayout {
@@ -76,7 +81,7 @@ NavigationPane {
                     background: Color.Black
                     opacity: 0.2
                     preferredWidth: DisplayInfo.width
-                    preferredHeight: (weatherDashboard.currentHeight - ((DisplayInfo.height / 10) - 30))
+                    preferredHeight: (weatherDashboard.currentHeight - ((DisplayInfo.height / 10) - 20))
                 }
             }
 
@@ -156,6 +161,8 @@ NavigationPane {
         onCreationCompleted: {
             // loading default image
             backgroundImage.showLocalImage("asset:///images/ambient_weather_intro.png");
+            
+            updateApplicationSettings();
 
             // create default cover
             var applicationCover = defaultCover.createObject();
@@ -185,6 +192,15 @@ NavigationPane {
             } else {
                 // console.log("# No active location set, starting location fix");
                 positionSource.start()
+            }
+        }
+
+        onUpdateApplicationSettings: {
+            ambientWeatherMainPage.currentApplicationSettings = new Array();
+            ambientWeatherMainPage.currentApplicationSettings = SettingsManager.getSettings();
+            if (ambientWeatherMainPage.currentApplicationSettings == undefined) {
+            SettingsManager.resetSettings();
+            ambientWeatherMainPage.currentApplicationSettings = SettingsManager.getSettings();
             }
         }
 
@@ -311,6 +327,19 @@ NavigationPane {
                 }
             ]
         },
+        // sheet for settings page
+        // this is used by the main menu about item
+        Sheet {
+            id: settingsSheet
+
+            // attach a component for the about page
+            attachedObjects: [
+                ComponentDefinition {
+                    id: settingsComponent
+                    source: "sheets/Settings.qml"
+                }
+            ]
+        },
         Invocation {
             id: rateAppLink
             query {
@@ -343,12 +372,10 @@ NavigationPane {
                 title: "Settings"
                 imageSource: "asset:///images/icon_settings.png"
                 onTriggered: {
-                    /*
-                     * // create and open news sheet
-                     * var newsPage = newsComponent.createObject();
-                     * newsSheet.setContent(newsPage);
-                     * newsSheet.open();
-                     */
+                    // create settings sheet
+                    var settingsPage = settingsComponent.createObject();
+                    settingsSheet.setContent(settingsPage);
+                    settingsSheet.open();
                 }
             },
             // action for rate sheet
