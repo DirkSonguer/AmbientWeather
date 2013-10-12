@@ -23,6 +23,9 @@ Container {
     property alias weatherLocation: weatherDataLocation.text
     property alias weatherCondition: weatherDataCondition.text
 
+    property alias currentWidth: layoutHandler.layoutFrame.width;
+    property alias currentHeight: layoutHandler.layoutFrame.height;    
+
     layout: StackLayout {
         orientation: LayoutOrientation.TopToBottom
     }
@@ -39,7 +42,7 @@ Container {
 
         horizontalAlignment: HorizontalAlignment.Right
         verticalAlignment: VerticalAlignment.Bottom
-
+        
         // main weather icon
         WeatherIcon {
             id: weatherDataIcon
@@ -60,7 +63,7 @@ Container {
 
             // text style definition
             textStyle.fontSize: FontSize.PointValue
-            textStyle.fontSizeValue: 30
+            textStyle.fontSizeValue: 40
             textStyle.fontWeight: FontWeight.W100
             textStyle.textAlign: TextAlign.Right
             textStyle.color: Color.White
@@ -72,11 +75,15 @@ Container {
         id: weatherDataCondition
 
         // layout definition
-        textStyle.base: SystemDefaults.TextStyles.BodyText
         horizontalAlignment: HorizontalAlignment.Right
-        textStyle.color: Color.White
         topMargin: 0
         bottomMargin: 0
+
+        textStyle.fontSize: FontSize.PointValue
+        textStyle.fontSizeValue: 12
+        textStyle.fontWeight: FontWeight.W100
+        textStyle.textAlign: TextAlign.Right
+        textStyle.color: Color.White
 
         text: "Getting data for position.."
     }
@@ -92,8 +99,9 @@ Container {
 
         text: "Ambient Weather"
 
-        // text style definition
-        textStyle.base: SystemDefaults.TextStyles.BigText
+        textStyle.fontSize: FontSize.PointValue
+        textStyle.fontSizeValue: 20
+        textStyle.fontWeight: FontWeight.W100
         textStyle.textAlign: TextAlign.Right
         textStyle.color: Color.White
         multiline: true
@@ -113,4 +121,10 @@ Container {
         weatherDataCondition.text = "Loading weather data.."
         weatherDataLocation.text = "Please wait"
     }
+    
+    attachedObjects: [
+        LayoutUpdateHandler {
+            id: layoutHandler
+        }
+    ]    
 }

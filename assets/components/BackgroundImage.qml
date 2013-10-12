@@ -21,12 +21,16 @@ Container {
     // signal to swith to image with new URL
     signal showImage(string imageURL)
 
+    // signal to swith to next / prev image
+    signal showNextImage()
+    signal showPrevImage()
+
     // signal to swith to a local image
     signal showLocalImage(string imageURL)
 
     // signal that loading process is done
     signal imageLoadingDone(int imageSlot)
-    
+
     // signal that orientation has changed
     signal orientationChanged(int width, int height)
 
@@ -53,7 +57,7 @@ Container {
         preferredWidth: DisplayInfo.width
         preferredHeight: DisplayInfo.height
         visible: false
-        
+
         // loading indicator
         // signal if loading is complete
         onImageSourceChanged: {
@@ -140,7 +144,7 @@ Container {
         } else {
             fadeOut.target = backgroundImageSlot2;
         }
-        
+
         // start transitions for both slots
         fadeIn.target = backgroundImageSlot0;
         fadeOut.play();
@@ -159,6 +163,36 @@ Container {
         }
     }
 
+    onShowNextImage: {
+        if (imageDataArray.length > 1) {
+            if (backgroundImageContainer.currentImageSlot == 1) {
+                fadeOut.target = backgroundImageSlot1;
+            } else {
+                fadeOut.target = backgroundImageSlot2;
+            }
+            fadeOut.play();
+            imageSwitchTimer.timeout();
+        }
+    }
+
+    onShowPrevImage: {
+        imageSwitchTimer.stop();
+
+        if (imageDataArray.length > 1) {
+            if (backgroundImageContainer.currentImageSlot == 1) {
+                fadeOut.target = backgroundImageSlot1;
+            } else {
+                fadeOut.target = backgroundImageSlot2;
+            }
+            if (backgroundImageContainer.currentImageIndex > 0) {
+                backgroundImageContainer.currentImageIndex -= 1;
+            } else {
+                backgroundImageContainer.currentImageIndex = (backgroundImageContainer.imageDataArray.length - 1);
+            }
+            fadeOut.play();
+        }
+    }
+
     // loading is done in the new slot
     onImageLoadingDone: {
         backgroundImageContainer.currentImageSlot = imageSlot;
@@ -170,10 +204,12 @@ Container {
             fadeIn.target = backgroundImageSlot2;
         }
 
-        fadeOut.play();
+        if ((fadeOut.target.visible) && (! fadeOut.isPlaying())) {
+            fadeOut.play();
+        }
         fadeIn.play();
     }
-    
+
     onOrientationChanged: {
         // console.log("# New orientation! Width is now " + width + " and height is now " + height);
         backgroundImageSlot0.preferredWidth = width;

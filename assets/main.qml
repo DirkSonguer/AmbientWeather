@@ -24,6 +24,7 @@ import "classes/flickrapi.js" as FlickrAPI
 import "classes/locationapi.js" as LocationAPI
 import "classes/weatherapi.js" as WeatherAPI
 import "classes/locationmanager.js" as LocationManager
+import "classes/swipehandler.js" as SwipeHandler
 import "structures/geolocationdata.js" as GeolocationData
 
 NavigationPane {
@@ -64,6 +65,19 @@ NavigationPane {
             // the component also contains the logic for changing images and their transitions
             BackgroundImage {
                 id: backgroundImage
+            }
+
+            Container {
+                verticalAlignment: VerticalAlignment.Bottom
+                horizontalAlignment: HorizontalAlignment.Right
+                bottomPadding: ((DisplayInfo.height / 10) - 20)
+
+                Container {
+                    background: Color.Black
+                    opacity: 0.2
+                    preferredWidth: DisplayInfo.width
+                    preferredHeight: (weatherDashboard.currentHeight - ((DisplayInfo.height / 10) - 30))
+                }
             }
 
             // weather dashboard
@@ -118,12 +132,30 @@ NavigationPane {
                     }
                 }
             ]
+
+            onTouch: {
+                if (event.isDown()) {
+                    SwipeHandler.swipeHandler.startSwipeCapture(event);
+                } else if (event.isUp()) {
+                    var swipeResult = SwipeHandler.swipeHandler.analyzeSwipeCapture(event);
+
+                    if (swipeResult == SwipeHandler.swipeHandler.SWIPELEFT) {
+                        backgroundImage.showNextImage();
+                    } else if (swipeResult == SwipeHandler.swipeHandler.SWIPERIGHT) {
+                        backgroundImage.showPrevImage();
+                    } else if (swipeResult == SwipeHandler.swipeHandler.SWIPEUP) {
+                        console.log("# up");
+                    } else if (swipeResult == SwipeHandler.swipeHandler.SWIPEDOWN) {
+                        console.log("# down");
+                    }
+                }
+            }
         }
 
         // app is loaded and page is available
         onCreationCompleted: {
             // loading default image
-            backgroundImage.showLocalImage("asset:///images/ambient_weather_intro.jpg");
+            backgroundImage.showLocalImage("asset:///images/ambient_weather_intro.png");
 
             // create default cover
             var applicationCover = defaultCover.createObject();
@@ -139,7 +171,7 @@ NavigationPane {
                 // console.log("# Using active location " + activeLocation.display_name);
 
                 // reset weather background image and dashboard
-                backgroundImage.showLocalImage("asset:///images/ambient_weather_intro.jpg");
+                backgroundImage.showLocalImage("asset:///images/ambient_weather_intro.png");
                 weatherDashboard.resetDashboard();
 
                 // create geolocation object and fill it with location data
@@ -160,7 +192,7 @@ NavigationPane {
         onChangeLocation: {
             // console.log("# Location changed !");
             // reset weather background image and dashboard
-            backgroundImage.showLocalImage("asset:///images/ambient_weather_intro.jpg");
+            backgroundImage.showLocalImage("asset:///images/ambient_weather_intro.png");
             weatherDashboard.resetDashboard();
 
             // reset default cover with new data
@@ -182,7 +214,7 @@ NavigationPane {
         onImageDataLoaded: {
             // check if images exist for location
             if (imageDataArray.length > 0) {
-                // console.log("# Found " + imageDataArray.length + " images for location " + ambientWeatherMainPage.currentGeolocation.latitude + " / " + ambientWeatherMainPage.currentGeolocation.longitude);
+                console.log("# Found " + imageDataArray.length + " images for location " + ambientWeatherMainPage.currentGeolocation.latitude + " / " + ambientWeatherMainPage.currentGeolocation.longitude);
 
                 // fill global image array with data
                 backgroundImage.imageDataArray = imageDataArray;
@@ -265,8 +297,71 @@ NavigationPane {
         ComponentDefinition {
             id: locationManagementComponent
             source: "pages/LocationManagement.qml"
+        },
+        // sheet for about page
+        // this is used by the main menu about item
+        Sheet {
+            id: aboutSheet
+
+            // attach a component for the about page
+            attachedObjects: [
+                ComponentDefinition {
+                    id: aboutComponent
+                    source: "sheets/About.qml"
+                }
+            ]
+        },
+        Invocation {
+            id: rateAppLink
+            query {
+                mimeType: "application/x-bb-appworld"
+                uri: "appworld://content/36698888"
+            }
         }
     ]
+
+    // application menu (top menu)
+    Menu.definition: MenuDefinition {
+        id: mainMenu
+
+        // application about
+        actions: [
+            ActionItem {
+                id: mainMenuAbout
+                title: "About"
+                imageSource: "asset:///images/icon_about.png"
+                onTriggered: {
+                    // create about sheet
+                    var aboutPage = aboutComponent.createObject();
+                    aboutSheet.setContent(aboutPage);
+                    aboutSheet.open();
+                }
+            },
+            // action for news sheet
+            ActionItem {
+                id: mainMenuSettings
+                title: "Settings"
+                imageSource: "asset:///images/icon_settings.png"
+                onTriggered: {
+                    /*
+                     * // create and open news sheet
+                     * var newsPage = newsComponent.createObject();
+                     * newsSheet.setContent(newsPage);
+                     * newsSheet.open();
+                     */
+                }
+            },
+            // action for rate sheet
+            ActionItem {
+                id: mainMenuRate
+                title: "Update & Rate"
+                imageSource: "asset:///images/icon_bbworld.png"
+                onTriggered: {
+                    rateAppLink.trigger("bb.action.OPEN");
+                }
+            }
+        ]
+    }
 
     // destroy pages after use
     onPopTransitionEnded: {
