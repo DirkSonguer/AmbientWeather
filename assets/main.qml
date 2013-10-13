@@ -46,6 +46,10 @@ NavigationPane {
         // this is of type ApplicationSettings
         property variant currentApplicationSettings
 
+        // property for the images for current location
+        // this is an array of type FlickrImageData
+        property variant currentImagedata
+
         // the current search radius for images
         // this might change dynamically if no images are found and the radius is widened
         property real currentLocationSearchRadius: Globals.locationSearchRadius
@@ -177,11 +181,6 @@ NavigationPane {
             // load and update application settings
             updateApplicationSettings();
 
-            // create default cover
-            var applicationCover = defaultCover.createObject();
-            applicationCover.resetDashboard();
-            Application.cover = applicationCover;
-
             //  get  available, stored locations
             var activeLocation = new Array;
             activeLocation = LocationManager.getActiveLocation();
@@ -223,7 +222,7 @@ NavigationPane {
 
             // load weather data into component again in case temperature scale has changed
             if (ambientWeatherMainPage.currentWeatherdata !== undefined) {
-                weatherDashboard.setWeatherData(ambientWeatherMainPage.currentWeatherdata);
+                weatherDashboard.setWeatherData(ambientWeatherMainPage.currentWeatherdata, ambientWeatherMainPage.currentImagedata);
             }
         }
 
@@ -233,11 +232,6 @@ NavigationPane {
             // reset weather background image and dashboard
             backgroundImage.showLocalImage("asset:///images/ambient_weather_intro.png");
             weatherDashboard.resetDashboard();
-
-            // reset default cover with new data
-            var applicationCover = defaultCover.createObject();
-            applicationCover.resetDashboard();
-            Application.cover = applicationCover;
 
             // create geolocation object and fill it with location data
             var locationCoordinates = new GeolocationData.GeolocationData;
@@ -257,14 +251,15 @@ NavigationPane {
 
                 // fill global image array with data
                 backgroundImage.imageDataArray = imageDataArray;
+                ambientWeatherMainPage.currentImagedata = imageDataArray;
+
+                // load weather data into component again with images
+                if (ambientWeatherMainPage.currentWeatherdata !== undefined) {
+                    weatherDashboard.setWeatherData(ambientWeatherMainPage.currentWeatherdata, ambientWeatherMainPage.currentImagedata);
+                }
 
                 // reset search radius (this may have been changed)
                 ambientWeatherMainPage.currentLocationSearchRadius = Globals.locationSearchRadius;
-                
-                // reset default cover with new data
-                var applicationCover = defaultCover.createObject();
-                applicationCover.setWeatherData(ambientWeatherMainPage.currentWeatherdata, imageDataArray[0]);
-                Application.cover = applicationCover;
             } else {
                 // console.log("# No images found for location " + ambientWeatherMainPage.currentGeolocation.latitude + " / " + ambientWeatherMainPage.currentGeolocation.longitude);
 
@@ -280,12 +275,7 @@ NavigationPane {
             ambientWeatherMainPage.currentWeatherdata = weatherData;
 
             // load weather data into component
-            weatherDashboard.setWeatherData(weatherData);
-
-            // reset default cover with new data
-            var applicationCover = defaultCover.createObject();
-            applicationCover.setWeatherData(weatherData, null);
-            Application.cover = applicationCover;
+            weatherDashboard.setWeatherData(weatherData, ambientWeatherMainPage.currentImagedata);
 
             // load images for location
             FlickrAPI.getFlickrSearchResults(ambientWeatherMainPage.currentGeolocation, weatherData, ambientWeatherMainPage.currentLocationSearchRadius, ambientWeatherMainPage);
@@ -328,10 +318,6 @@ NavigationPane {
                         backgroundImage.orientationChanged(DisplayInfo.height, DisplayInfo.width);
                     }
                 }
-            },
-            ComponentDefinition {
-                id: defaultCover
-                source: "covers/DefaultCover.qml"
             }
         ]
     }

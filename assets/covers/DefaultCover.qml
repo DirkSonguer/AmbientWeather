@@ -105,11 +105,11 @@ SceneCover {
     // set weather data for dashboard
     onSetWeatherData: {
         // console.log("# Setting weather data for cover: " + weatherData.weather_description + " in " + weatherData.name);
-        weatherDataTemperature.text = Math.round(weatherData.main_temp - 273.15) + "°";
+        weatherDataTemperature.text = weatherData.main_temp;
         weatherDataLocation.text = weatherData.weather_description + " in " + weatherData.name;
 
-        if (imageData != null) {
-            var imageUrl = "http://farm" + imageData.farm + ".staticflickr.com/" + imageData.server + "/" + imageData.id + "_" + imageData.secret + "_z.jpg";
+        if (imageData != undefined) {
+            var imageUrl = "http://farm" + imageData[0].farm + ".staticflickr.com/" + imageData[0].server + "/" + imageData[0].id + "_" + imageData[0].secret + "_z.jpg";
             console.log("# Setting background image for cover: " + imageUrl);
             backgroundImage.url = imageUrl;
         }

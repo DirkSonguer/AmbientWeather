@@ -9,12 +9,15 @@
 // import blackberry components
 import bb.cascades 1.0
 
+// shared js files
+import "../structures/weatherdata.js" as WeatherData
+
 Container {
     id: weatherDataComponent
 
     // signal to set data for the dashboard
     // data is given as type WeatherData
-    signal setWeatherData(variant weatherData)
+    signal setWeatherData(variant weatherData, variant imageData)
 
     // reset dashboard data
     signal resetDashboard()
@@ -109,21 +112,36 @@ Container {
 
     // set weather data for dashboard
     onSetWeatherData: {
+    	// create new weather data object
+        var currentWeatherData = new WeatherData.WeatherData();
+        currentWeatherData = weatherData;
+
         // check the weather scale and convert temperature accordingly
         switch (ambientWeatherMainPage.currentApplicationSettings.temperaturescale) {
             case "Celsius":
                 weatherDataTemperature.text = Math.round(weatherData.main_temp - 273.15) + "°";
+                currentWeatherData.main_temp = Math.round(weatherData.main_temp - 273.15) + "°";
                 break;
             case "Fahrenheit":
                 weatherDataTemperature.text = Math.round((weatherData.main_temp * 9 / 5) - 459.67) + "°";
+                currentWeatherData.main_temp = Math.round((weatherData.main_temp * 9 / 5) - 459.67) + "°";
                 break;
             case "Kelvin":
                 weatherDataTemperature.text = Math.round(weatherData.main_temp) + "°";
+                currentWeatherData.main_temp = Math.round(weatherData.main_temp) + "°";
                 break;
         }
+        
+        // set data to dashboard
         weatherDataCondition.text = weatherData.weather_description + " in";
         weatherDataLocation.text = weatherData.name;
         weatherDataIcon.weatherData = weatherData;
+        
+        // create default cover
+        var applicationCover = defaultCover.createObject();
+        applicationCover.resetDashboard();
+        applicationCover.setWeatherData(currentWeatherData, imageData);
+        Application.cover = applicationCover;
     }
 
     // reset weather data for dashboard
@@ -136,6 +154,10 @@ Container {
     attachedObjects: [
         LayoutUpdateHandler {
             id: layoutHandler
+        },
+        ComponentDefinition {
+            id: defaultCover
+            source: "../covers/DefaultCover.qml"
         }
     ]    
 }
