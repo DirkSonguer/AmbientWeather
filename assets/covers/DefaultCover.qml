@@ -8,87 +8,115 @@
 // import blackberry components
 import bb.cascades 1.0
 
+// import url loader workaround
+import org.labsquare 1.0
+
 // set import directory for components
 import "../components"
 
 SceneCover {
     // signal to set data for the dashboard
     // data is given as type WeatherData
-    signal setWeatherData(variant weatherData)
+    signal setWeatherData(variant weatherData, variant imageData)
 
     // reset dashboard data
     signal resetDashboard()
 
     content: Container {
-        layout: StackLayout {
-            orientation: LayoutOrientation.BottomToTop
-        }
-
-        // layout definition
-        background: Color.Black
-        verticalAlignment: VerticalAlignment.Bottom
-        horizontalAlignment: HorizontalAlignment.Right
-        leftPadding: 10
-        rightPadding: 10
-        topPadding: 10
-        bottomPadding: 10
-        
-        // the label for the given location data
-        Label {
-            id: weatherDataLocation
-            
-            // layout definition
-            horizontalAlignment: HorizontalAlignment.Center
-            bottomMargin: 0
-            topMargin: 0
-            
-            text: "Ambient Weather"
-            
-            // text style definition
-            textStyle.base: SystemDefaults.TextStyles.BodyText
-            textStyle.textAlign: TextAlign.Right
-            textStyle.color: Color.White
-            multiline: true
-        }
-
-        // the label for the temperature
-        Label {
-            id: weatherDataTemperature
-            
-            // layout definition
-            horizontalAlignment: HorizontalAlignment.Center
-            bottomMargin: 0
-            topMargin: 0
-            
-            // text style definition
-            textStyle.fontSize: FontSize.PointValue
-            textStyle.fontSizeValue: 30
-            textStyle.fontWeight: FontWeight.W100
-            textStyle.textAlign: TextAlign.Right
-            textStyle.color: Color.White
+        layout: DockLayout {
         }
         
-        // main weather icon
-        WeatherIcon {
-            id: weatherDataIcon
-            
+        preferredWidth: 334
+        preferredHeight: 396        
+                
+        // first image slot
+        WebImageView {
+            id: backgroundImage
+
             // layout definition
+            scalingMethod: ScalingMethod.AspectFill
+            verticalAlignment: VerticalAlignment.Top
+            // 334 pixels wide by 396
+//            preferredWidth: 334
+//            preferredHeight: 396
+//            visible: true
+        }
+
+        Container {
+            // layout definition
+            background: Color.Black
+            verticalAlignment: VerticalAlignment.Bottom
+            horizontalAlignment: HorizontalAlignment.Right
+            preferredHeight: parent.preferredHeight
+            preferredWidth: parent.preferredWidth
+            opacity: 0.3
+        }
+
+        Container {
+            layout: StackLayout {
+                orientation: LayoutOrientation.BottomToTop
+            }
+
+            // layout definition
+            verticalAlignment: VerticalAlignment.Bottom
             horizontalAlignment: HorizontalAlignment.Center
-            bottomMargin: 0
-            topMargin: 0
-        }    
+            leftPadding: 10
+            rightPadding: 10
+            topPadding: 10
+            bottomPadding: 10
+
+            // the label for the given location data
+            Label {
+                id: weatherDataLocation
+
+                // layout definition
+                horizontalAlignment: HorizontalAlignment.Center
+                bottomMargin: 0
+                topMargin: 0
+
+                text: "Ambient Weather"
+
+                // text style definition
+                textStyle.base: SystemDefaults.TextStyles.BodyText
+                textStyle.textAlign: TextAlign.Right
+                textStyle.color: Color.White
+                multiline: true
+            }
+
+            // the label for the temperature
+            Label {
+                id: weatherDataTemperature
+
+                // layout definition
+                horizontalAlignment: HorizontalAlignment.Right
+                verticalAlignment: VerticalAlignment.Bottom
+                bottomMargin: 0
+
+                // text style definition
+                textStyle.fontSize: FontSize.PointValue
+                textStyle.fontSizeValue: 30
+                textStyle.fontWeight: FontWeight.W100
+                textStyle.textAlign: TextAlign.Right
+                textStyle.color: Color.White
+            }
+        }
     }
-
+    
     // set weather data for dashboard
     onSetWeatherData: {
+        // console.log("# Setting weather data for cover: " + weatherData.weather_description + " in " + weatherData.name);
         weatherDataTemperature.text = Math.round(weatherData.main_temp - 273.15) + "°";
-        weatherDataLocation.text = weatherData.name;
-        weatherDataIcon.weatherData = weatherData;
+        weatherDataLocation.text = weatherData.weather_description + " in " + weatherData.name;
+
+        if (imageData != null) {
+            var imageUrl = "http://farm" + imageData.farm + ".staticflickr.com/" + imageData.server + "/" + imageData.id + "_" + imageData.secret + "_z.jpg";
+            console.log("# Setting background image for cover: " + imageUrl);
+            backgroundImage.url = imageUrl;
+        }
     }
 
     // reset weather data for dashboard
     onResetDashboard: {
-        weatherDataTemperature.text = "31";
         weatherDataLocation.text = "Please wait"
     }
 }

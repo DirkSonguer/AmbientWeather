@@ -17,66 +17,73 @@ Page {
         // layout definition
         layout: DockLayout {
         }
-        
-        // actual content
-        Container {
-            layout: StackLayout {
-            }
-            horizontalAlignment: HorizontalAlignment.Left
-            verticalAlignment: VerticalAlignment.Center
 
-            // instago icon
+        ScrollView {
+            scrollViewProperties {
+                scrollMode: ScrollMode.Vertical
+                pinchToZoomEnabled: false
+            }
+
+            // actual content
             Container {
                 layout: StackLayout {
-                    orientation: LayoutOrientation.LeftToRight
                 }
                 horizontalAlignment: HorizontalAlignment.Left
                 verticalAlignment: VerticalAlignment.Center
-                // the actual weather icon
-                ImageView {
-                    id: weatherIconImage
-                    
-                    // default image for icon
-                    imageSource: "asset:///images/intro_day.png"
-                }
-                
-                // a preview weather icon
-                // this is only used for startup
-                ImageView {
-                    id: weatherIconPreview
-                    
-                    // default image for icon
-                    imageSource: "asset:///images/intro_night.png"
-                }
 
-            }
+                // instago icon
+                Container {
+                    layout: StackLayout {
+                        orientation: LayoutOrientation.LeftToRight
+                    }
+                    horizontalAlignment: HorizontalAlignment.Left
+                    verticalAlignment: VerticalAlignment.Center
+                    // the actual weather icon
+                    ImageView {
+                        id: weatherIconImage
 
-            // instago headline
-            Container {
-                leftPadding: 15
-                Label {
-                    text: qsTr("AmbientWeather")
-                    textStyle.base: SystemDefaults.TextStyles.BigText
-                }
-            }
+                        // default image for icon
+                        imageSource: "asset:///images/intro_day.png"
+                    }
 
-            Container {
-                leftPadding: 15
-                rightPadding: 15
-                
-                // instago main about text
-                // this is defined in the global copytext file
-                Label {
-                    text: qsTr(Globals.ambientWeatherDescription)
-                    textStyle.base: SystemDefaults.TextStyles.BodyText
-                    multiline: true
+                    // a preview weather icon
+                    // this is only used for startup
+                    ImageView {
+                        id: weatherIconPreview
+
+                        // default image for icon
+                        imageSource: "asset:///images/intro_night.png"
+                    }
+
                 }
 
-                // instago version
-                // this is defined in the globals
-                Label {
-                    text: qsTr("Version: " + Globals.currentApplicationVersion)
-                    textStyle.base: SystemDefaults.TextStyles.BodyText
+                // instago headline
+                Container {
+                    leftPadding: 15
+                    Label {
+                        text: qsTr("AmbientWeather")
+                        textStyle.base: SystemDefaults.TextStyles.BigText
+                    }
+                }
+
+                Container {
+                    leftPadding: 15
+                    rightPadding: 15
+
+                    // instago main about text
+                    // this is defined in the global copytext file
+                    Label {
+                        text: qsTr(Globals.ambientWeatherDescription)
+                        textStyle.base: SystemDefaults.TextStyles.BodyText
+                        multiline: true
+                    }
+
+                    // instago version
+                    // this is defined in the globals
+                    Label {
+                        text: qsTr("Version: " + Globals.currentApplicationVersion)
+                        textStyle.base: SystemDefaults.TextStyles.BodyText
+                    }
                 }
             }
         }

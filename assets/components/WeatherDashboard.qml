@@ -109,7 +109,18 @@ Container {
 
     // set weather data for dashboard
     onSetWeatherData: {
-        weatherDataTemperature.text = Math.round(weatherData.main_temp - 273.15) + "°";
+        // check the weather scale and convert temperature accordingly
+        switch (ambientWeatherMainPage.currentApplicationSettings.temperaturescale) {
+            case "Celsius":
+                weatherDataTemperature.text = Math.round(weatherData.main_temp - 273.15) + "°";
+                break;
+            case "Fahrenheit":
+                weatherDataTemperature.text = Math.round((weatherData.main_temp * 9 / 5) - 459.67) + "°";
+                break;
+            case "Kelvin":
+                weatherDataTemperature.text = Math.round(weatherData.main_temp) + "°";
+                break;
+        }
         weatherDataCondition.text = weatherData.weather_description + " in";
         weatherDataLocation.text = weatherData.name;
         weatherDataIcon.weatherData = weatherData;

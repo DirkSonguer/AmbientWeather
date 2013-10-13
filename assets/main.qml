@@ -42,11 +42,13 @@ NavigationPane {
         // this is of type LocationData
         property variant currentWeatherdata
 
+        // property for the current application settings
+        // this is of type ApplicationSettings
+        property variant currentApplicationSettings
+
         // the current search radius for images
         // this might change dynamically if no images are found and the radius is widened
         property real currentLocationSearchRadius: Globals.locationSearchRadius
-
-        property variant currentApplicationSettings
 
         // flickr api signals
         signal imageDataLoaded(variant imageDataArray)
@@ -60,6 +62,7 @@ NavigationPane {
         // this will be called by other pages if a new location should be used
         signal changeLocation(variant locationData)
 
+        // signal that the settings have been updated
         signal updateApplicationSettings()
 
         Container {
@@ -72,16 +75,21 @@ NavigationPane {
                 id: backgroundImage
             }
 
+            // wrapper component for the light black background
             Container {
+                // style definition
+                // this defines the bottom margin
                 verticalAlignment: VerticalAlignment.Bottom
                 horizontalAlignment: HorizontalAlignment.Right
                 bottomPadding: ((DisplayInfo.height / 10) - 20)
 
+                // actual light black background
                 Container {
+                    // style definition
+                    preferredHeight: (weatherDashboard.currentHeight - ((DisplayInfo.height / 10) - 30))
+                    preferredWidth: DisplayInfo.width
                     background: Color.Black
                     opacity: 0.2
-                    preferredWidth: DisplayInfo.width
-                    preferredHeight: (weatherDashboard.currentHeight - ((DisplayInfo.height / 10) - 20))
                 }
             }
 
@@ -139,11 +147,15 @@ NavigationPane {
             ]
 
             onTouch: {
+                // start the swipe handler on touch down and analyze the data on touch up
                 if (event.isDown()) {
+                    // store start position of gesture
                     SwipeHandler.swipeHandler.startSwipeCapture(event);
                 } else if (event.isUp()) {
+                    // analyze end position of gesture
                     var swipeResult = SwipeHandler.swipeHandler.analyzeSwipeCapture(event);
 
+                    // check if a swipe has been catched and act accordingly
                     if (swipeResult == SwipeHandler.swipeHandler.SWIPELEFT) {
                         backgroundImage.showNextImage();
                     } else if (swipeResult == SwipeHandler.swipeHandler.SWIPERIGHT) {
@@ -161,7 +173,8 @@ NavigationPane {
         onCreationCompleted: {
             // loading default image
             backgroundImage.showLocalImage("asset:///images/ambient_weather_intro.png");
-            
+
+            // load and update application settings
             updateApplicationSettings();
 
             // create default cover
@@ -195,12 +208,22 @@ NavigationPane {
             }
         }
 
+        // load and update application settings
         onUpdateApplicationSettings: {
+            // load settings
             ambientWeatherMainPage.currentApplicationSettings = new Array();
             ambientWeatherMainPage.currentApplicationSettings = SettingsManager.getSettings();
+
+            // if this is the first application start the app actually does not have settings yet
+            // thus reset settings for first use
             if (ambientWeatherMainPage.currentApplicationSettings == undefined) {
-            SettingsManager.resetSettings();
-            ambientWeatherMainPage.currentApplicationSettings = SettingsManager.getSettings();
+                SettingsManager.resetSettings();
+                ambientWeatherMainPage.currentApplicationSettings = SettingsManager.getSettings();
+            }
+
+            // load weather data into component again in case temperature scale has changed
+            if (ambientWeatherMainPage.currentWeatherdata !== undefined) {
+                weatherDashboard.setWeatherData(ambientWeatherMainPage.currentWeatherdata);
             }
         }
 
@@ -237,6 +260,11 @@ NavigationPane {
 
                 // reset search radius (this may have been changed)
                 ambientWeatherMainPage.currentLocationSearchRadius = Globals.locationSearchRadius;
+                
+                // reset default cover with new data
+                var applicationCover = defaultCover.createObject();
+                applicationCover.setWeatherData(ambientWeatherMainPage.currentWeatherdata, imageDataArray[0]);
+                Application.cover = applicationCover;
             } else {
                 // console.log("# No images found for location " + ambientWeatherMainPage.currentGeolocation.latitude + " / " + ambientWeatherMainPage.currentGeolocation.longitude);
 
@@ -256,7 +284,7 @@ NavigationPane {
 
             // reset default cover with new data
             var applicationCover = defaultCover.createObject();
-            applicationCover.setWeatherData(weatherData);
+            applicationCover.setWeatherData(weatherData, null);
             Application.cover = applicationCover;
 
             // load images for location
