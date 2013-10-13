@@ -30,6 +30,8 @@ Page {
                 }
                 horizontalAlignment: HorizontalAlignment.Left
                 verticalAlignment: VerticalAlignment.Center
+                topPadding: 15
+                bottomPadding: 25
 
                 // instago icon
                 Container {
@@ -70,6 +72,13 @@ Page {
                     leftPadding: 15
                     rightPadding: 15
 
+                    // instago version
+                    // this is defined in the globals
+                    Label {
+                        text: qsTr("Version: " + Globals.currentApplicationVersion)
+                        textStyle.base: SystemDefaults.TextStyles.SmallText
+                    }
+                    
                     // instago main about text
                     // this is defined in the global copytext file
                     Label {
@@ -77,12 +86,28 @@ Page {
                         textStyle.base: SystemDefaults.TextStyles.BodyText
                         multiline: true
                     }
-
-                    // instago version
-                    // this is defined in the globals
+                }
+                
+                // instago headline
+                Container {
+                    topMargin: 30
+                    leftPadding: 15
                     Label {
-                        text: qsTr("Version: " + Globals.currentApplicationVersion)
+                        text: qsTr("Privacy Policy")
+                        textStyle.base: SystemDefaults.TextStyles.BigText
+                    }
+                }
+                
+                Container {
+                    leftPadding: 15
+                    rightPadding: 15
+                    
+                    // instago main about text
+                    // this is defined in the global copytext file
+                    Label {
+                        text: qsTr(Globals.ambientWeatherPrivacy)
                         textStyle.base: SystemDefaults.TextStyles.BodyText
+                        multiline: true
                     }
                 }
             }

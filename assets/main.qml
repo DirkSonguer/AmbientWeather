@@ -85,12 +85,14 @@ NavigationPane {
                 // this defines the bottom margin
                 verticalAlignment: VerticalAlignment.Bottom
                 horizontalAlignment: HorizontalAlignment.Right
-                bottomPadding: ((DisplayInfo.height / 10) - 20)
+                bottomPadding: ((DisplayInfo.height / 12) - 20)
 
                 // actual light black background
                 Container {
+                    id: backgroundDashboard
+
                     // style definition
-                    preferredHeight: (weatherDashboard.currentHeight - ((DisplayInfo.height / 10) - 30))
+                    preferredHeight: (weatherDashboard.currentHeight - ((DisplayInfo.height / 12) - 30))
                     preferredWidth: DisplayInfo.width
                     background: Color.Black
                     opacity: 0.2
@@ -103,7 +105,7 @@ NavigationPane {
                 id: weatherDashboard
 
                 // bottom padding is dynamic according to screen size
-                bottomPadding: (DisplayInfo.height / 10)
+                bottomPadding: (DisplayInfo.height / 12)
                 rightPadding: 20
             }
 
@@ -314,8 +316,10 @@ NavigationPane {
                 onOrientationAboutToChange: {
                     if (orientation == UIOrientation.Portrait) {
                         backgroundImage.orientationChanged(DisplayInfo.width, DisplayInfo.height);
+                        backgroundDashboard.preferredWidth = DisplayInfo.width;
                     } else if (orientation == UIOrientation.Landscape) {
                         backgroundImage.orientationChanged(DisplayInfo.height, DisplayInfo.width);
+                        backgroundDashboard.preferredWidth = DisplayInfo.height;
                     }
                 }
             }

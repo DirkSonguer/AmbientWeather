@@ -1,6 +1,9 @@
 
 1.1.0
 
+* Added: Option to switch temperature scale (Celsius, Fahrenheit, Kelvin)
+* Added: About page
+* Added: Optimized picture loading
 * Added: Cover that shows weather information when in card mode
 * Optimized: Message if no location could not be found
 

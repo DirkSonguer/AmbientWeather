@@ -25,10 +25,10 @@ SceneCover {
     content: Container {
         layout: DockLayout {
         }
-        
+
         preferredWidth: 334
-        preferredHeight: 396        
-                
+        preferredHeight: 396
+
         // first image slot
         WebImageView {
             id: backgroundImage
@@ -37,9 +37,9 @@ SceneCover {
             scalingMethod: ScalingMethod.AspectFill
             verticalAlignment: VerticalAlignment.Top
             // 334 pixels wide by 396
-//            preferredWidth: 334
-//            preferredHeight: 396
-//            visible: true
+            //            preferredWidth: 334
+            //            preferredHeight: 396
+            //            visible: true
         }
 
         Container {
@@ -101,16 +101,17 @@ SceneCover {
             }
         }
     }
-    
+
     // set weather data for dashboard
     onSetWeatherData: {
         // console.log("# Setting weather data for cover: " + weatherData.weather_description + " in " + weatherData.name);
         weatherDataTemperature.text = weatherData.main_temp;
         weatherDataLocation.text = weatherData.weather_description + " in " + weatherData.name;
 
+        // show image if available
         if (imageData != undefined) {
+            // console.log("# Setting background image for cover: " + imageUrl);
             var imageUrl = "http://farm" + imageData[0].farm + ".staticflickr.com/" + imageData[0].server + "/" + imageData[0].id + "_" + imageData[0].secret + "_z.jpg";
-            console.log("# Setting background image for cover: " + imageUrl);
             backgroundImage.url = imageUrl;
         }
     }
