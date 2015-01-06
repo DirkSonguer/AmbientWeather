@@ -110,6 +110,10 @@ Page {
             }
         }
     }
+    
+    onCreationCompleted: {
+        locationInput.requestFocus();
+    }
 
     onLocationDataLoaded: {
         locationList.clearList();

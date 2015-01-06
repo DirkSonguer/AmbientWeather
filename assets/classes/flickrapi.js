@@ -75,11 +75,11 @@ function getFlickrSearchResults(currentGeolocation, currentWeatherData, currentS
 	url += "&nojsoncallback=1";
 	url += "&sort=interestingness-desc";
 	url += "&group_id=1463451@N25&";
-	url += "tags=" + flickrTags + "&";
-	url += "bbox=" + (currentGeolocation.longitude - currentSearchRadius);
-	url += "," + (currentGeolocation.latitude - currentSearchRadius);
-	url += "," + (currentGeolocation.longitude + currentSearchRadius);
-	url += "," + (currentGeolocation.latitude + currentSearchRadius);
+	url += "tags=" + flickrTags + "&";	
+	url += "bbox=" + (parseFloat(currentGeolocation.longitude) - parseFloat(currentSearchRadius));
+	url += "," + (parseFloat(currentGeolocation.latitude) - parseFloat(currentSearchRadius));
+	url += "," + (parseFloat(currentGeolocation.longitude) + parseFloat(currentSearchRadius));
+	url += "," + (parseFloat(currentGeolocation.latitude) + parseFloat(currentSearchRadius));
 	// weatherData.weather_description
 	// console.log("# URL for flickr image call: " + url);
 
