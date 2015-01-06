@@ -68,7 +68,7 @@ function getFlickrSearchResults(currentGeolocation, currentWeatherData, currentS
 	}
 
 	// build URL for API call with relevant parameters
-	var url = "http://ycpi.api.flickr.com/services/rest";
+	var url = "https://api.flickr.com/services/rest";
 	url += "?method=flickr.photos.search";
 	url += "&api_key=ade5c803d5c7e7bc2012f2a0785f829c";
 	url += "&format=json";
